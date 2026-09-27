@@ -1,0 +1,33 @@
+# OMPL for mrRobot: moveit_configs_utils' own defaults (its planner_configs
+# are merged in when this file has none), plus a finer collision check along
+# every path the arm groups plan.
+#
+# longest_valid_segment_fraction is the step, as a fraction of the joint
+# space's extent, at which a path is checked for collision while it is being
+# planned. MoveIt's 0.005 is about 3 cm of hand travel for these arms, and the
+# worktop slab is 5 cm: arm-and-column reaches came back as paths that
+# clipped it between two checks, which move_group then refused on its own
+# finer validation (INVALID_MOTION_PLAN, twice in a row, and the slower
+# column-first fallback took over; measured). 0.002 is about 1 cm.
+planning_plugin: ompl_interface/OMPLPlanner
+start_state_max_bounds_error: 0.1
+jiggle_fraction: 0.05
+request_adapters: >-
+    default_planner_request_adapters/AddTimeOptimalParameterization
+    default_planner_request_adapters/ResolveConstraintFrames
+    default_planner_request_adapters/FixWorkspaceBounds
+    default_planner_request_adapters/FixStartStateBounds
+    default_planner_request_adapters/FixStartStateCollision
+    default_planner_request_adapters/FixStartStatePathConstraints
+left_arm:
+  default_planner_config: RRTConnect
+  longest_valid_segment_fraction: 0.002
+right_arm:
+  default_planner_config: RRTConnect
+  longest_valid_segment_fraction: 0.002
+left_arm_lift:
+  default_planner_config: RRTConnect
+  longest_valid_segment_fraction: 0.002
+right_arm_lift:
+  default_planner_config: RRTConnect
+  longest_valid_segment_fraction: 0.002

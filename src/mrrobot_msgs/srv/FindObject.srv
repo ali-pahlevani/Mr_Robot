@@ -1,0 +1,15 @@
+# Where is the object of this colour, in the map frame?
+#
+# Answered from memory if the detector has seen it within max_age seconds;
+# otherwise the head is swept through a pan/tilt search until the detector
+# reports it or the sweep is exhausted.
+string colour
+float32 max_age     # seconds; 0 means "whatever is in memory, any age"
+bool sweep          # allowed to move the head to look for it
+geometry_msgs/Point near   # only detections within near_radius of this map point count
+float32 near_radius        # metres; 0 means anywhere (the kitchen has two jam jars)
+---
+bool found
+geometry_msgs/PoseStamped pose
+float32 age         # seconds since the detection this answer is based on
+string message

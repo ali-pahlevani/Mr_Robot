@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<package format="3">
+  <name>mrrobot_navigation</name>
+  <version>1.0.0</version>
+  <description>
+    Localization and Nav2 for mrRobot: the EKF that fuses wheel odometry with
+    the IMU, slam_toolbox for mapping the kitchen, AMCL on the saved map, the
+    scan relocalizer, the Nav2 servers tuned for a 0.84 x 0.57 m base in a
+    tight kitchen, and a ground-truth localization error logger.
+  </description>
+  <maintainer email="a.pahlevani1998@gmail.com">Ali Pahlevani</maintainer>
+  <license>MIT</license>
+  <url type="website">https://github.com/ali-pahlevani/Mr_Robot</url>
+  <url type="repository">https://github.com/ali-pahlevani/Mr_Robot.git</url>
+  <url type="bugtracker">https://github.com/ali-pahlevani/Mr_Robot/issues</url>
+  <author email="a.pahlevani1998@gmail.com">Ali Pahlevani</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_amcl</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_smoother</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_behaviors</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_mppi_controller</exec_depend>
+  <exec_depend>nav2_smac_planner</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

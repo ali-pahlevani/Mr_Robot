@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<package format="3">
+  <name>mrrobot_description</name>
+  <version>1.0.0</version>
+  <description>
+    URDF description and meshes for mrRobot: the OpenFleX humanoid upper body
+    on a Clearpath Husky A200 base, with its sensors and ros2_control
+    interfaces. The Webots PROTO in mrrobot_webots is generated from it.
+  </description>
+  <maintainer email="a.pahlevani1998@gmail.com">Ali Pahlevani</maintainer>
+  <license>MIT</license>
+  <url type="website">https://github.com/ali-pahlevani/Mr_Robot</url>
+  <url type="repository">https://github.com/ali-pahlevani/Mr_Robot.git</url>
+  <url type="bugtracker">https://github.com/ali-pahlevani/Mr_Robot/issues</url>
+  <author email="a.pahlevani1998@gmail.com">Ali Pahlevani</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- the URDF includes OpenFleX's xacros at build time -->
+  <build_depend>openarmx_description</build_depend>
+  <build_depend>openarmx_head_description</build_depend>
+  <build_depend>lift_slide_description</build_depend>
+  <exec_depend>openarmx_description</exec_depend>
+  <exec_depend>openarmx_head_description</exec_depend>
+  <exec_depend>lift_slide_description</exec_depend>
+
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

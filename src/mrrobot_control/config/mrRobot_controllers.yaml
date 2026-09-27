@@ -1,0 +1,181 @@
+# ros2_control setup for mrRobot. The hardware behind all of this is Webots,
+# through webots_ros2_control, which pairs each joint with the Webots motor of
+# the same name. Joint names are OpenFleX's (openarmx_description,
+# lift_slide_description, openarmx_head_description) plus the Husky's wheels.
+controller_manager:
+  ros__parameters:
+    update_rate: 60          # Hz; the world runs a 16 ms step, so this keeps up
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    base_controller:
+      type: diff_drive_controller/DiffDriveController
+    lift_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    head_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    left_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    right_arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    left_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    right_gripper_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+base_controller:
+  ros__parameters:
+    left_wheel_names: [front_left_wheel_joint, rear_left_wheel_joint]
+    right_wheel_names: [front_right_wheel_joint, rear_right_wheel_joint]
+    # the A200's track and wheel radius at base_scale = 0.85
+    # (mrRobot.urdf.xacro); the two multipliers below are MEASURED and do
+    # not scale with them.
+    wheel_separation: 0.47175
+    wheel_radius: 0.140335
+    # Four wheels on a rigid frame have to scrub sideways to yaw, so a commanded
+    # turn always comes out slower than the differential-drive formula predicts.
+    # Measured, not guessed, against supervisor ground truth (two whole turns
+    # at 0.5 rad/s so the angular ramps are 1% of the arc rather than 8% of a
+    # quarter turn), and re-measured whenever either body's
+    # mass or the track changes. At full size it was 2.3; at base_scale 0.85 the
+    # same wheel speeds spin a narrower track faster, and 1.655 brings a
+    # commanded 0.5 rad/s out within 1-2% of true (nine runs, 0.981-1.019).
+    # The EKF takes heading from the IMU anyway; this only has to be close
+    # enough that Nav2's commanded turn rates mean what they say.
+    wheel_separation_multiplier: 1.655
+    # Straight travel used to over-report: at full size the wheels turned 12%
+    # further than the base moved and this was 0.853 to correct it. The
+    # 0.85-scale base does not slip: measured at rest on both ends of a 0.4 m
+    # leg (sampling while moving compares a 10 Hz truth topic against 50 Hz
+    # odometry, and that latency alone is 2 cm of the leg), est/true is 1.0000
+    # and true/commanded 0.98-1.01. A third of the weight came off the same
+    # coefficient of friction, which is the whole of it. Left at 1.0 rather
+    # than deleted so the next re-measurement has somewhere to go.
+    left_wheel_radius_multiplier: 1.0
+    right_wheel_radius_multiplier: 1.0
+
+    publish_rate: 50.0
+    odom_frame_id: odom
+    base_frame_id: base_link
+    # robot_localization's EKF (mrrobot_navigation/config/ekf.yaml) publishes
+    # odom->base_link from this odometry fused with the IMU; two publishers of
+    # the same transform would fight, so this one stays off.
+    enable_odom_tf: false
+    open_loop: false
+    use_stamped_vel: false
+
+    # Deliberately below the A200's 1.0 m/s: this is a kitchen, and the robot
+    # carries a 1.9 m column over its axles.
+    linear.x.has_velocity_limits: true
+    linear.x.max_velocity: 0.6
+    linear.x.min_velocity: -0.6
+    linear.x.has_acceleration_limits: true
+    linear.x.max_acceleration: 1.0
+    angular.z.has_velocity_limits: true
+    angular.z.max_velocity: 1.2
+    angular.z.min_velocity: -1.2
+    angular.z.has_acceleration_limits: true
+    angular.z.max_acceleration: 2.0
+
+# The lift column: -0.75 (lowest) .. +0.40 (highest) m about its mid travel.
+lift_controller:
+  ros__parameters:
+    joints: [lift_joint]
+    command_interfaces: [position]
+    state_interfaces: [position, velocity]
+
+# pitch (nod, about x) then yaw (turn, about z), OpenFleX's joint order
+head_controller:
+  ros__parameters:
+    joints: [openarmx_head_pitch_joint, openarmx_head_yaw_joint]
+    command_interfaces: [position]
+    state_interfaces: [position, velocity]
+
+left_arm_controller:
+  ros__parameters:
+    joints:
+      - openarmx_left_joint1
+      - openarmx_left_joint2
+      - openarmx_left_joint3
+      - openarmx_left_joint4
+      - openarmx_left_joint5
+      - openarmx_left_joint6
+      - openarmx_left_joint7
+    command_interfaces: [position]
+    state_interfaces: [position, velocity]
+    # Tolerances, so that an arm stopped by something it touched makes the
+    # action FAIL instead of "goal reached" while 1.4 rad short (measured).
+    # MoveIt then reports the failure and the mission can react. The goal
+    # tolerance is 0.08 rad, not 0.04: pressing the microwave door shut
+    # (a centimetre of interference by design) leaves a steady 0.044 rad
+    # on the wrist (measured), and that is a push, not a failure. The path
+    # tolerance is 0.5 rad, not 0.4: the wrist trails its trajectory by
+    # about 80 ms of its speed (a few simulation steps of motor lag), which
+    # at MoveIt's 0.4 scaling of the joint limits is 0.34 rad on a free
+    # swing (measured: 0.42 at 0.5 scaling, and the hover with a jar in
+    # hand was aborted for it); a hand that meets something is a radian
+    # off within a step.
+    constraints:
+      goal_time: 2.5
+      openarmx_left_joint1: {trajectory: 0.5, goal: 0.08}
+      openarmx_left_joint2: {trajectory: 0.5, goal: 0.08}
+      openarmx_left_joint3: {trajectory: 0.5, goal: 0.08}
+      openarmx_left_joint4: {trajectory: 0.5, goal: 0.08}
+      openarmx_left_joint5: {trajectory: 0.5, goal: 0.08}
+      openarmx_left_joint6: {trajectory: 0.5, goal: 0.08}
+      openarmx_left_joint7: {trajectory: 0.5, goal: 0.08}
+
+right_arm_controller:
+  ros__parameters:
+    joints:
+      - openarmx_right_joint1
+      - openarmx_right_joint2
+      - openarmx_right_joint3
+      - openarmx_right_joint4
+      - openarmx_right_joint5
+      - openarmx_right_joint6
+      - openarmx_right_joint7
+    command_interfaces: [position]
+    state_interfaces: [position, velocity]
+    # Tolerances, so that an arm stopped by something it touched makes the
+    # action FAIL instead of "goal reached" while 1.4 rad short (measured).
+    # MoveIt then reports the failure and the mission can react.
+    constraints:
+      goal_time: 2.5
+      openarmx_right_joint1: {trajectory: 0.5, goal: 0.08}
+      openarmx_right_joint2: {trajectory: 0.5, goal: 0.08}
+      openarmx_right_joint3: {trajectory: 0.5, goal: 0.08}
+      openarmx_right_joint4: {trajectory: 0.5, goal: 0.08}
+      openarmx_right_joint5: {trajectory: 0.5, goal: 0.08}
+      openarmx_right_joint6: {trajectory: 0.5, goal: 0.08}
+      openarmx_right_joint7: {trajectory: 0.5, goal: 0.08}
+
+# OpenFleX's hand: finger_joint2 mimics finger_joint1 in the URDF, but in
+# Webots each finger is its own slider, so both take the same command here.
+# 0 is closed, 0.07 fully open (per finger; see openarmx_hand.xacro for why not OpenFleX's 0.044).
+# The left hand's fingers: a position target turned into a FORCE by this
+# PID (the effort interface, see mrRobot.ros2_control.xacro), so each finger
+# is a 200 N/m spring towards where it was told to go. Closing on something
+# is told 45 cm past closed (arms.py): 98 N of pinch on a 9 cm jar, nearly
+# the same anywhere the fingers stop, under the 120 N its motors cap at
+# (build_proto.py), and so still a spring: a jar pushed off centre is
+# pushed back -- which two saturated position motors never did. Soft on
+# purpose: 600 N/m rang at this 50 Hz control rate (measured, +-4 cm);
+# 200 N/m on the 0.1 kg finger is a 7 Hz spring, and d damps it.
+left_gripper_controller:
+  ros__parameters:
+    joints: [openarmx_left_finger_joint1, openarmx_left_finger_joint2]
+    command_interfaces: [effort]
+    state_interfaces: [position, velocity]
+    gains:
+      openarmx_left_finger_joint1: {p: 200.0, d: 6.0, i: 0.0, i_clamp: 0.0, ff_velocity_scale: 0.0}
+      openarmx_left_finger_joint2: {p: 200.0, d: 6.0, i: 0.0, i_clamp: 0.0, ff_velocity_scale: 0.0}
+
+# The right hand's fingers: position control, as the door hand (see
+# mrRobot.ros2_control.xacro for why it is not a spring like the left).
+right_gripper_controller:
+  ros__parameters:
+    joints: [openarmx_right_finger_joint1, openarmx_right_finger_joint2]
+    command_interfaces: [position]
+    state_interfaces: [position, velocity]

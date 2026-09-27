@@ -1,0 +1,61 @@
+# What the colour detector looks for, and how the object memory searches.
+#
+# Each object is a BODY colour (HSV, OpenCV's 0-180 hue; several ranges so red
+# can wrap round hue 0), a physical SIZE the blob must have -- width and height
+# in metres, measured from the depth image, which is what tells a 9 cm jar
+# from a 30 cm cereal box of the same colour -- and optionally a LID colour
+# that must be found in the strip just above the body, and optionally how far
+# BELOW the blob the object's reference point is (a jar found by its lid), with
+# a colour that must fill the strip UNDER the blob so a logo is not a lid.
+color_detector:
+  ros__parameters:
+    use_sim_time: true
+    image_topic: /head_camera/image_color
+    depth_topic: /head_depth/image
+    info_topic: /head_camera/camera_info
+    target_frame: map
+    rate: 5.0
+    min_pixels: 40
+    objects: [honey, jam]
+    honey:
+      body_hsv: [10, 120, 90, 28, 255, 255]          # lo H S V, hi H S V (per range, flattened)
+      size: [0.09, 0.115]                             # width, height of the jar
+      size_tolerance: 0.35                            # fraction
+      radius: 0.045                                   # surface -> axis
+      under_hsv: [0, 0, 30, 180, 70, 220]             # worktop under a jar; a box has more box
+      under_min_fraction: 0.4
+      height_range: [0.88, 1.06]                      # a jar's mid-height on a 0.89 m worktop
+    # The jam jar is mostly a white label: what is red is the checked lid
+    # and the band under it (hue 0-2, S 50-150, V 130-200 measured; the
+    # orange-red cereal box next to it is hue 19). So the LID is the blob
+    # -- 9 cm wide, 4 cm tall with the band -- and the jar's axis at
+    # mid-height is 4.5 cm below its centre.
+    jam:
+      body_hsv: [0, 45, 100, 8, 255, 255, 172, 45, 100, 180, 255, 255]   # two ranges: red wraps hue 0
+      size: [0.09, 0.06]
+      size_tolerance: 0.35                      # the width: 9 cm from any side
+      height_span: [0.025, 0.14]                # 3 cm side-on (the lid's rim), 9 cm from above (its
+                                                # top face), 13 cm when the jam shows through the glass
+      radius: 0.0                               # the lid's top face is centred on the axis already
+      below: 0.03                               # 4.5 cm when only the lid is seen, 0 when all the jar
+      under_hsv: [0, 0, 60, 180, 90, 255]       # the label under the lid, or the worktop under the jar
+      under_min_fraction: 0.35                  # (a red logo on a box has yellow box under it)
+      height_range: [0.88, 1.06]                # (and sits 20 cm higher than a jar's lid)
+      fill_range: [0.25, 0.85]                  # gingham: half the box is white; a logo is solid
+
+object_memory:
+  ros__parameters:
+    use_sim_time: true
+    fresh_seconds: 30.0
+    # head sweep, after the look at `near` when the caller gives one: every
+    # pan at every tilt; pitch is OpenFleX's (negative nods down). The D455
+    # sees 87 x 71 degrees, so pans 0.7 rad apart overlap, and one tilt of
+    # -0.5 covers the worktop from 0.5 m out to the far wall; the second
+    # tilt is for a jar at the robot's feet.
+    sweep_pans: [0.0, -0.7, 0.7, -1.4, 1.4]
+    sweep_tilts: [-0.5, -0.95]
+    # the detector runs at 5 Hz and the estimate wants two frames that agree
+    # 1.0, not 0.7: the detector runs at 5 Hz and the memory wants two
+    # agreeing samples, so 0.7 s was three frames a look, and a frame or two
+    # lost to the head's TF arriving late left a sweep with nothing
+    settle_seconds: 1.0

@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="openarmx_head">
+
+  <xacro:arg name="can_interface" default="can2"/>
+  <xacro:arg name="use_fake_hardware" default="false"/>
+  <xacro:arg name="can_fd" default="false"/>
+  <xacro:arg name="control_mode" default="mit"/>
+  <xacro:arg name="home_on_activate" default="true"/>
+  <xacro:arg name="home_duration_sec" default="3.0"/>
+
+  <!--
+    STL files from assembly: X=left/right, Y=up, Z=front/back, unit=mm.
+    URDF: Z=up, unit=meters.
+    Visual: v_final = Rx(+pi/2) * scale * v_stl + xyz
+    Rx(+pi/2): (sx,sy,sz) -> (sx, -sz, sy)
+
+    Structure:
+      base_link (fixed) — neck parts + bottom motor RS00-2 body
+        └─ pitch joint at RS00-2 center (bottom motor, nod up/down)
+           └─ pitch_link — upper motor RS00-1 + connectors + guard plate
+              └─ yaw joint at RS00-1 center (upper motor, turn left/right)
+                 └─ yaw_link — head shells + camera + head bracket + limit
+  -->
+  <xacro:property name="mesh_scale" value="0.001 0.001 0.001"/>
+  <xacro:property name="mesh_rpy" value="${pi/2} 0 0"/>
+
+  <!-- World link (fixed base) -->
+  <link name="world"/>
+
+  <!-- Head base link (颈部/底座，固定部分) -->
+  <link name="head_base_link">
+    <visual>
+      <origin xyz="-0.5630 0.0866 0.0" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/TBBJ-04_neck_mount.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5630 0.0866 0.0" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/TBBJ-02_neck_bracket.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5630 0.0866 0.0" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/TBBJ-06_neck_limit.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5630 0.0866 0.0" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/RS00_motor_2.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="dark_grey"><color rgba="0.2 0.2 0.2 1.0"/></material>
+    </visual>
+  </link>
+
+  <joint name="world_to_head_base" type="fixed">
+    <parent link="world"/>
+    <child link="head_base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Pitch link (随底部电机旋转: 颈部护罩 + 上部电机 + 连接件 + 护板) -->
+  <link name="head_pitch_link">
+    <visual>
+      <origin xyz="-0.5631 0.0798 -0.0395" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/DY-03_neck_cover.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="white"><color rgba="0.9 0.9 0.9 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5631 0.0798 -0.0395" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/RS00_motor_1.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="dark_grey"><color rgba="0.2 0.2 0.2 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5631 0.0798 -0.0395" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/TB-01_head_connector.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5631 0.0798 -0.0395" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/TBBJ-03_guard_plate.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+  </link>
+
+  <!-- Pitch joint at bottom motor RS00-2 (俯仰/抬头低头) -->
+  <joint name="openarmx_head_pitch_joint" type="revolute">
+    <parent link="head_base_link"/>
+    <child link="head_pitch_link"/>
+    <origin xyz="0.0001 0.0068 0.0395" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.086" upper="0.403" velocity="33.0" effort="14.0"/>
+  </joint>
+
+  <!-- Yaw link (随上部电机旋转: 头部外壳 + 钣金 + 摄像头) -->
+  <link name="head_yaw_link">
+    <visual>
+      <origin xyz="-0.5631 0.0824 -0.1072" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/TBBJ-01_head_bracket.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5631 0.0824 -0.1072" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/TBBJ-05_head_limit.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5631 0.0824 -0.1072" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/DY-01_head_front_shell.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="white"><color rgba="0.9 0.9 0.9 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5631 0.0824 -0.1072" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/DY-02_head_rear_shell.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="white"><color rgba="0.9 0.9 0.9 1.0"/></material>
+    </visual>
+    <visual>
+      <origin xyz="-0.5631 0.0824 -0.1072" rpy="${mesh_rpy}"/>
+      <geometry>
+        <mesh filename="package://openarmx_head_description/meshes/visual/femto_bolt_camera.STL" scale="${mesh_scale}"/>
+      </geometry>
+      <material name="black"><color rgba="0.1 0.1 0.1 1.0"/></material>
+    </visual>
+  </link>
+
+  <!-- Yaw joint at upper motor RS00-1 (偏航/左右摇头) -->
+  <joint name="openarmx_head_yaw_joint" type="revolute">
+    <parent link="head_pitch_link"/>
+    <child link="head_yaw_link"/>
+    <origin xyz="0.0 -0.0026 0.0677" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-1.5708" upper="1.5708" velocity="33.0" effort="14.0"/>
+  </joint>
+
+  <!-- ros2_control -->
+  <xacro:include filename="$(find openarmx_head_description)/urdf/ros2_control/head.ros2_control.xacro"/>
+  <xacro:openarmx_head_ros2_control
+    can_interface="$(arg can_interface)"
+    use_fake_hardware="$(arg use_fake_hardware)"
+    can_fd="$(arg can_fd)"
+    control_mode="$(arg control_mode)"
+    home_on_activate="$(arg home_on_activate)"
+    home_duration_sec="$(arg home_duration_sec)"/>
+
+</robot>

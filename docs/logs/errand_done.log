@@ -1,0 +1,134 @@
+[INFO] [1790514736.186990482] [mrRobot_mission]: mission: waiting for move_group
+[INFO] [1790514740.998936826] [mrRobot_mission]: mission: the stack is up
+[INFO] [1790514741.037330574] [mrRobot_mission]: 1/16 posture name=tuck
+[INFO] [1790514746.819884740] [mrRobot_mission]: 2/16 goto station=honey
+[INFO] [1790514746.859215882] [mrRobot_mission]: relocalize: fit 3.2 -> 3.0 cm; moved (+0.000, -0.005, +0.0 deg); pinned 0.45 cm
+[INFO] [1790514747.440793723] [mrRobot_mission]: honey: via (0.58, 0.33), 0.40 m before the dock
+[INFO] [1790514747.441596854] [mrRobot_mission]: nav: short hop 0.40 m for (0.58, 0.33, +0 deg)
+[INFO] [1790514752.362115416] [mrRobot_mission]: relocalize: fit 3.4 -> 1.4 cm; moved (+0.045, +0.020, +0.1 deg); pinned 0.94 cm
+[INFO] [1790514755.469445974] [mrRobot_mission]: nav: hop landed at (0.53, 0.39, -1 deg), 0.08 m from the goal
+[INFO] [1790514755.505802679] [mrRobot_mission]: relocalize: fit 4.3 -> 1.6 cm; moved (+0.025, -0.070, +0.7 deg); pinned 0.58 cm
+[INFO] [1790514761.119200899] [mrRobot_mission]: approach: there; -0.1 cm along / +0.0 cm across the goal, heading +0.2 deg (odom)
+[INFO] [1790514761.671660211] [mrRobot_mission]: honey: the honey is +1.3 cm ahead / +0.1 cm left of where the grip wants it, heading +0.3 deg
+[INFO] [1790514761.699747683] [mrRobot_mission]: 3/16 find object=honey, hand=left
+[INFO] [1790514761.702514274] [mrRobot_mission]: find: honey at (1.694, 0.698, 0.952), 0.0 s old, from memory
+[INFO] [1790514761.703857905] [mrRobot_mission]: 4/16 pick object=honey, hand=left
+[INFO] [1790514764.485464309] [mrRobot_mission]: left arm + column -> lift -0.133 above the pre-grasp
+[INFO] [1790514772.939132482] [mrRobot_mission]: left arm -> (0.783, 0.371, 0.840) cartesian grasp
+[INFO] [1790514777.303911706] [mrRobot_mission]: left fingers closed to 0.0428
+[INFO] [1790514777.310648397] [mrRobot_mission]: left arm -> (0.783, 0.371, 0.900) cartesian lift
+[INFO] [1790514778.170033930] [mrRobot_mission]: left arm -> (0.645, 0.371, 0.900) cartesian retreat
+[INFO] [1790514780.194402298] [mrRobot_mission]: left fingers closed to 0.0428
+[INFO] [1790514784.056961126] [mrRobot_mission]: left arm + column -> lift +0.000 carry
+[INFO] [1790514788.038579916] [mrRobot_mission]: 5/16 goto station=microwave
+[INFO] [1790514788.575071070] [mrRobot_mission]: relocalize: fit 2.8 -> 1.4 cm; moved (+0.025, +0.020, +0.1 deg); pinned 0.27 cm
+[INFO] [1790514790.338387579] [mrRobot_mission]: microwave_handle: taken +8.7 cm along from its middle
+[INFO] [1790514791.910675692] [mrRobot_mission]: relocalize: fit 2.6 -> 1.5 cm; moved (+0.025, -0.005, -0.1 deg); pinned 0.42 cm
+[INFO] [1790514794.916602893] [mrRobot_mission]: relocalize: fit 1.9 -> 1.4 cm; moved (+0.005, +0.005, +0.2 deg); pinned 0.37 cm
+[INFO] [1790514795.429215146] [mrRobot_mission]: microwave: -1.1 cm off the line, +1.2 cm along it, +0.2 deg
+[INFO] [1790514795.465289121] [mrRobot_mission]: 6/16 door hand=right, open=True
+[INFO] [1790514795.498011602] [mrRobot_mission]: right arm + column -> lift +0.185 before the handle
+[INFO] [1790514798.673944691] [mrRobot_mission]: door: wrist sees the panel 0.1890 m out (16214 px, bar 3025 px), fixture said 0.2001; grip short 0.0236; bar at z 1.0196 against 1.0186, grip +0.0011
+[INFO] [1790514798.674313070] [mrRobot_mission]: right arm -> (0.664, -0.097, 1.020) cartesian on the handle
+[INFO] [1790514800.059580374] [mrRobot_mission]: door: TCP wanted 0.6636 -0.0965 1.0196, got 0.6625 -0.0966 1.0196 (along the approach -0.0011)
+[INFO] [1790514802.078288973] [mrRobot_mission]: right fingers closed to 0.0051
+[INFO] [1790514802.081259545] [mrRobot_mission]: right arm -> 5 points, cartesian the door's arc
+[INFO] [1790514810.564340975] [mrRobot_mission]: right arm + column -> lift +0.000 tuck
+[INFO] [1790514813.254268554] [mrRobot_mission]: door: simulator reads the hinge at 86 deg
+[INFO] [1790514813.261272656] [mrRobot_mission]: 7/16 goto station=microwave_in
+[INFO] [1790514813.705200056] [mrRobot_mission]: relocalize: fit 2.7 -> 1.6 cm; moved (+0.020, +0.010, +0.3 deg); pinned 0.52 cm
+[INFO] [1790514815.421845451] [mrRobot_mission]: microwave_in: faced from -26 deg, one curve in after backing out 29 cm
+[INFO] [1790514817.669407712] [mrRobot_mission]: relocalize: fit 2.7 -> 1.7 cm; moved (+0.030, -0.000, +0.6 deg); pinned 0.75 cm
+[INFO] [1790514822.867187646] [mrRobot_mission]: approach: there; -0.3 cm along / +0.3 cm across the goal, heading +1.1 deg (odom)
+[INFO] [1790514822.867765967] [mrRobot_mission]: microwave_in: +0.3 cm off the line, -0.3 cm along it, +1.1 deg (dead reckoning)
+[INFO] [1790514822.917648679] [mrRobot_mission]: 8/16 place at=microwave_in, hand=left, approach=[-0.2, 0, 0.01], above=0.005, shoulder_above=0.25, lead_in=[0.0, 0.15], hover_lift=0.25, retreat=retrace
+[INFO] [1790514823.237410978] [mrRobot_mission]: left fingers closed to 0.0442
+[INFO] [1790514823.895872816] [mrRobot_mission]: left arm + column -> lift +0.134 above the way in
+[INFO] [1790514831.486886463] [mrRobot_mission]: left arm -> (0.780, 0.342, 0.923) cartesian over the spot
+[INFO] [1790514833.711267662] [mrRobot_mission]: left arm -> (0.780, 0.342, 0.918) cartesian set down
+[INFO] [1790514835.335680819] [mrRobot_mission]: left arm: out the way it went in (3 points, 0.2 s)
+[INFO] [1790514835.655950127] [mrRobot_mission]: left arm: out the way it went in (12 points, 2.1 s)
+[INFO] [1790514837.911490558] [mrRobot_mission]: left arm + column -> lift +0.000 tuck
+[INFO] [1790514842.084245600] [mrRobot_mission]: 9/16 goto station=microwave
+[INFO] [1790514842.085678057] [mrRobot_mission]: microwave_handle: taken -4.4 cm along from its middle
+[INFO] [1790514843.480379316] [mrRobot_mission]: relocalize: fit 3.9 -> 1.5 cm; moved (+0.030, +0.040, +0.1 deg); pinned 0.42 cm
+[INFO] [1790514845.072216679] [mrRobot_mission]: microwave_handle: taken +0.6 cm along from its middle
+[INFO] [1790514846.377519522] [mrRobot_mission]: relocalize: fit 1.9 -> 1.5 cm; moved (+0.010, -0.005, +0.2 deg); pinned 0.41 cm
+[INFO] [1790514846.924471637] [mrRobot_mission]: microwave: +0.3 cm off the line, +1.3 cm along it, +1.2 deg
+[INFO] [1790514846.965319596] [mrRobot_mission]: 10/16 door hand=right, open=False
+[WARN] [1790514847.184274220] [mrRobot_mission]: IK computation failed! Error code: NO_IK_SOLUTION
+[WARN] [1790514847.388895700] [mrRobot_mission]: IK computation failed! Error code: NO_IK_SOLUTION
+[WARN] [1790514847.596061486] [mrRobot_mission]: IK computation failed! Error code: NO_IK_SOLUTION
+[WARN] [1790514847.596647692] [mrRobot_mission]: right arm: no IK for before the door with the column at -0.223
+[INFO] [1790514851.599734304] [mrRobot_mission]: right arm -> (0.532, -0.123, 0.801) before the door, fist up
+[INFO] [1790514857.427589298] [mrRobot_mission]: right arm -> (0.652, -0.123, 0.801) cartesian under the door's edge
+[INFO] [1790514858.738474747] [mrRobot_mission]: right arm -> (0.652, -0.123, 0.831) cartesian up against the face
+[INFO] [1790514863.311703502] [mrRobot_mission]: right arm -> (0.651, -0.123, 0.843) cartesian door up to 76 deg
+[INFO] [1790514863.972343806] [mrRobot_mission]: door: pushed to 76 deg, simulator reads 66 deg
+[INFO] [1790514863.972706223] [mrRobot_mission]: right arm -> (0.653, -0.123, 0.855) cartesian door up to 65 deg
+[INFO] [1790514865.431971232] [mrRobot_mission]: door: pushed to 65 deg, simulator reads 45 deg
+[INFO] [1790514865.432350801] [mrRobot_mission]: right arm -> (0.656, -0.123, 0.867) cartesian door up to 55 deg
+[INFO] [1790514866.459367013] [mrRobot_mission]: door: pushed to 55 deg, simulator reads 29 deg
+[INFO] [1790514866.459910318] [mrRobot_mission]: right arm -> (0.662, -0.123, 0.877) cartesian door up to 45 deg
+[INFO] [1790514867.099249240] [mrRobot_mission]: door: pushed to 45 deg, simulator reads 28 deg
+[INFO] [1790514868.701527729] [mrRobot_mission]: right arm -> (0.669, -0.123, 0.887) cartesian door up to 34 deg
+[INFO] [1790514869.381076479] [mrRobot_mission]: door: pushed to 34 deg, simulator reads -0 deg
+[INFO] [1790514869.381407268] [mrRobot_mission]: right arm: the door is shut
+[INFO] [1790514869.381836029] [mrRobot_mission]: right arm: off the door (3 points, 0.6 s)
+[INFO] [1790514870.036771938] [mrRobot_mission]: right arm + column -> lift +0.000 tuck
+[INFO] [1790514872.700224078] [mrRobot_mission]: door: simulator reads the hinge at -0 deg
+[INFO] [1790514872.700761453] [mrRobot_mission]: 11/16 goto station=jam
+[INFO] [1790514872.738732359] [mrRobot_mission]: relocalize: fit 1.9 -> 1.5 cm; moved (+0.010, +0.005, +0.2 deg); pinned 0.39 cm
+[INFO] [1790514874.971507145] [mrRobot_mission]: jam: via (0.73, -0.67), 0.25 m before the dock
+[INFO] [1790514874.972079375] [mrRobot_mission]: nav: short hop 0.93 m for (0.73, -0.67, +0 deg)
+[INFO] [1790514885.042845787] [mrRobot_mission]: nav: hop landed at (0.75, -0.76, -0 deg), 0.09 m from the goal
+[INFO] [1790514885.077339885] [mrRobot_mission]: relocalize: fit 4.9 -> 1.9 cm; moved (+0.030, +0.130, +0.2 deg); pinned 0.30 cm
+[INFO] [1790514888.488841323] [mrRobot_mission]: relocalize: fit 2.2 -> 2.1 cm; moved (+0.005, +0.005, -0.0 deg); pinned 0.32 cm
+[INFO] [1790514893.220853924] [mrRobot_mission]: approach: there; +0.3 cm along / -0.2 cm across the goal, heading -1.0 deg (odom)
+[INFO] [1790514893.772597751] [mrRobot_mission]: jam: the jam is -0.2 cm ahead / -0.2 cm left of where the grip wants it, heading -0.6 deg
+[INFO] [1790514893.805245148] [mrRobot_mission]: 12/16 find object=jam, hand=left
+[INFO] [1790514893.811431934] [mrRobot_mission]: find: jam at (1.664, -0.312, 0.954), 0.0 s old, from memory
+[INFO] [1790514893.812602222] [mrRobot_mission]: 13/16 pick object=jam, hand=left
+[INFO] [1790514896.581040031] [mrRobot_mission]: left arm + column -> lift -0.131 above the pre-grasp
+[INFO] [1790514901.386276609] [mrRobot_mission]: left arm -> (0.768, 0.368, 0.842) cartesian grasp
+[INFO] [1790514905.826142189] [mrRobot_mission]: left fingers closed to 0.0443
+[INFO] [1790514905.834635198] [mrRobot_mission]: left arm -> (0.768, 0.368, 0.902) cartesian lift
+[INFO] [1790514906.693929054] [mrRobot_mission]: left arm -> (0.645, 0.368, 0.902) cartesian retreat
+[INFO] [1790514908.559427755] [mrRobot_mission]: left fingers closed to 0.0443
+[INFO] [1790514912.321788695] [mrRobot_mission]: left arm + column -> lift +0.000 carry
+[INFO] [1790514916.165780371] [mrRobot_mission]: 14/16 goto station=table
+[INFO] [1790514916.751103969] [mrRobot_mission]: relocalize: fit 3.2 -> 1.7 cm; moved (+0.030, -0.000, -0.5 deg); pinned 0.15 cm
+[INFO] [1790514920.194491170] [mrRobot_mission]: table: via (0.77, -0.11), 0.40 m before the dock
+[INFO] [1790514920.195150312] [mrRobot_mission]: nav: short hop 0.65 m for (0.77, -0.11, +180 deg)
+[INFO] [1790514926.366297234] [mrRobot_mission]: relocalize: fit 5.7 -> 1.6 cm; moved (+0.020, +0.085, -0.1 deg); pinned 0.94 cm
+[INFO] [1790514931.521472068] [mrRobot_mission]: nav: hop landed at (0.91, -0.05, +178 deg), 0.15 m from the goal
+[INFO] [1790514931.557748616] [mrRobot_mission]: relocalize: fit 7.6 -> 3.7 cm; moved (-0.100, -0.055, +1.9 deg); pinned 0.46 cm
+[INFO] [1790514936.794791989] [mrRobot_mission]: approach: there; -0.1 cm along / +0.0 cm across the goal, heading +0.1 deg (odom)
+[INFO] [1790514936.831198942] [mrRobot_mission]: relocalize: fit 5.4 -> 4.6 cm; moved (+0.025, +0.020, +358.9 deg); pinned 0.53 cm
+[INFO] [1790514938.511661813] [mrRobot_mission]: table: +0.0 cm off the line, -0.6 cm along it, +0.1 deg
+[INFO] [1790514938.550443015] [mrRobot_mission]: 15/16 place at=table_spot, hand=left, approach=[0, 0, 0.1], shoulder_above=0.3
+[INFO] [1790514938.853048158] [mrRobot_mission]: left fingers closed to 0.0458
+[INFO] [1790514939.365002008] [mrRobot_mission]: left arm + column -> lift -0.186 pre-place
+[INFO] [1790514945.249039514] [mrRobot_mission]: left arm -> (0.627, 0.489, 0.748) cartesian over the spot
+[INFO] [1790514946.508813586] [mrRobot_mission]: left arm -> (0.627, 0.489, 0.698) cartesian set down
+[INFO] [1790514948.985146906] [mrRobot_mission]: left arm -> (0.627, 0.489, 0.748) cartesian retreat
+[INFO] [1790514950.045653403] [mrRobot_mission]: left arm -> (0.627, 0.489, 0.848) cartesian up
+[INFO] [1790514951.255504102] [mrRobot_mission]: left arm + column -> lift +0.000 tuck
+[INFO] [1790514953.773509561] [mrRobot_mission]: 16/16 posture name=tuck
+[INFO] [1790514955.379378360] [mrRobot_mission]: done
+[INFO] [1790514955.380047361] [mrRobot_mission]:     1 posture  ok     (1 attempt)
+[INFO] [1790514955.380375385] [mrRobot_mission]:     2 goto     ok     (1 attempt)
+[INFO] [1790514955.380671148] [mrRobot_mission]:     3 find     ok     (1 attempt)
+[INFO] [1790514955.381005262] [mrRobot_mission]:     4 pick     ok     (1 attempt)
+[INFO] [1790514955.381313108] [mrRobot_mission]:     5 goto     ok     (1 attempt)
+[INFO] [1790514955.381605284] [mrRobot_mission]:     6 door     ok     (1 attempt)
+[INFO] [1790514955.381896248] [mrRobot_mission]:     7 goto     ok     (1 attempt)
+[INFO] [1790514955.382193705] [mrRobot_mission]:     8 place    ok     (1 attempt)
+[INFO] [1790514955.382491091] [mrRobot_mission]:     9 goto     ok     (1 attempt)
+[INFO] [1790514955.382779430] [mrRobot_mission]:    10 door     ok     (1 attempt)
+[INFO] [1790514955.383074932] [mrRobot_mission]:    11 goto     ok     (1 attempt)
+[INFO] [1790514955.383364394] [mrRobot_mission]:    12 find     ok     (1 attempt)
+[INFO] [1790514955.383656440] [mrRobot_mission]:    13 pick     ok     (1 attempt)
+[INFO] [1790514955.383950299] [mrRobot_mission]:    14 goto     ok     (1 attempt)
+[INFO] [1790514955.384265378] [mrRobot_mission]:    15 place    ok     (1 attempt)
+[INFO] [1790514955.384560901] [mrRobot_mission]:    16 posture  ok     (1 attempt)

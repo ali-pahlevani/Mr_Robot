@@ -1,0 +1,6 @@
+name: lift_slide_description
+branch: v1.0_basic
+revision: 1
+required_files:
+  - README.md
+

@@ -1,0 +1,62 @@
+joint1:
+  kinematic:
+    x: 0.0
+    y: 0.0
+    z: 0.058
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+
+joint2:
+  kinematic:
+    x: -0.0205
+    y: 0.0
+    z: 0.081
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+
+joint3:
+  kinematic:
+    x: 0.02
+    y: 0.0
+    z: 0.099
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+
+joint4:
+  kinematic:
+    x: 0.0
+    y: 0.031002
+    z: 0.14181
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+
+joint5:
+  kinematic:
+    x: 0.0
+    y: -0.0309
+    z: 0.126
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+
+joint6:
+  kinematic:
+    x: 0.037426
+    y: 0.0
+    z: 0.131
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+
+joint7:
+  kinematic:
+    x: -0.0375
+    y: 0.0
+    z: 0.0
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0

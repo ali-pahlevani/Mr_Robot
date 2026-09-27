@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<package format="3">
+  <name>mrrobot_msgs</name>
+  <version>1.0.0</version>
+  <description>Interfaces shared by the mrRobot packages.</description>
+  <maintainer email="a.pahlevani1998@gmail.com">Ali Pahlevani</maintainer>
+  <license>MIT</license>
+  <url type="website">https://github.com/ali-pahlevani/Mr_Robot</url>
+  <url type="repository">https://github.com/ali-pahlevani/Mr_Robot.git</url>
+  <url type="bugtracker">https://github.com/ali-pahlevani/Mr_Robot/issues</url>
+  <author email="a.pahlevani1998@gmail.com">Ali Pahlevani</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

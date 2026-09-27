@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<package format="3">
+  <name>mrrobot_bringup</name>
+  <version>1.0.0</version>
+  <description>
+    One launch file that brings up the whole of mrRobot: Webots with the kitchen
+    world, the ROS 2 driver, robot_state_publisher, every controller, RViz, and
+    optionally the kitchen errand.
+  </description>
+  <maintainer email="a.pahlevani1998@gmail.com">Ali Pahlevani</maintainer>
+  <license>MIT</license>
+  <url type="website">https://github.com/ali-pahlevani/Mr_Robot</url>
+  <url type="repository">https://github.com/ali-pahlevani/Mr_Robot.git</url>
+  <url type="bugtracker">https://github.com/ali-pahlevani/Mr_Robot/issues</url>
+  <author email="a.pahlevani1998@gmail.com">Ali Pahlevani</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>mrrobot_description</exec_depend>
+  <exec_depend>mrrobot_webots</exec_depend>
+  <exec_depend>mrrobot_control</exec_depend>
+  <exec_depend>webots_ros2_driver</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>nav2_rviz_plugins</exec_depend>
+  <exec_depend>moveit_ros_visualization</exec_depend>
+  <exec_depend>mrrobot_navigation</exec_depend>
+  <exec_depend>mrrobot_moveit_config</exec_depend>
+  <exec_depend>mrrobot_perception</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+
+  <test_depend>launch_testing_ament_cmake</test_depend>
+  <test_depend>launch_testing</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

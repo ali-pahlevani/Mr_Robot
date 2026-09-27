@@ -1,0 +1,226 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="lift_slide_module">
+  <xacro:arg name="min_height" default="-0.750"/>
+  <xacro:arg name="max_height" default="0.400"/>
+  <xacro:arg name="plate_origin_x" default="0.000"/>
+  <xacro:arg name="plate_origin_z" default="0.8100"/>
+  <xacro:arg name="plate_origin_y" default="0.0550"/>
+  <xacro:arg name="ros2_control" default="false"/>
+  <xacro:arg name="use_fake_hardware" default="true"/>
+  <xacro:arg name="can_interface" default="can3"/>
+  <xacro:arg name="calibration_file" default=""/>
+  <!-- Keep integrated bringup's separate lift CAN args compatible with the new lift package. -->
+  <xacro:arg name="lift_can_interface" default="$(arg can_interface)"/>
+  <xacro:arg name="node_id" default="16"/>
+  <xacro:arg name="lift_node_id" default="$(arg node_id)"/>
+  <xacro:arg name="counts_per_meter" default="2000000.0"/>
+  <xacro:arg name="counts_per_revolution" default="10000.0"/>
+  <xacro:arg name="profile_acceleration" default="50000"/>
+  <xacro:arg name="profile_deceleration" default="50000"/>
+  <xacro:arg name="homing_method" default="27"/>
+  <xacro:arg name="homing_speed_mps" default="0.010"/>
+  <xacro:arg name="homing_low_speed_ratio" default="0.2"/>
+  <xacro:arg name="homing_acceleration" default="50000"/>
+  <xacro:arg name="homing_timeout_sec" default="60.0"/>
+  <xacro:arg name="homing_configure_di" default="true"/>
+  <xacro:arg name="lower_switch_position_m" default="0.000"/>
+  <xacro:arg name="home_switch_position_m" default="0.650"/>
+  <xacro:arg name="upper_switch_position_m" default="0.950"/>
+  <xacro:arg name="switch_position_tolerance_m" default="0.008"/>
+  <xacro:arg name="di_active_low" default="true"/>
+  <xacro:arg name="di6_not_func" default="2"/>
+  <xacro:arg name="di4_homing_func" default="22"/>
+  <xacro:arg name="di5_pot_func" default="1"/>
+  <xacro:arg name="home_di_channel" default="4"/>
+  <xacro:arg name="pot_di_channel" default="5"/>
+  <xacro:arg name="not_di_channel" default="6"/>
+  <xacro:arg name="invert_command" default="true"/>
+  <xacro:arg name="invert_feedback" default="true"/>
+  <xacro:arg name="max_velocity_mps" default="0.10"/>
+  <xacro:arg name="command_timeout_sec" default="0.5"/>
+  <xacro:arg name="sdo_timeout_sec" default="0.20"/>
+  <xacro:arg name="feedback_poll_rate_hz" default="20.0"/>
+
+  <!-- DY-04 胸腔：固定在滑台上，随 lift_carriage_link 升降；STL 毫米 -->
+  <xacro:property name="chest_mesh_scale" value="0.001 0.001 0.001"/>
+  <xacro:property name="chest_joint_xyz" value="0.000 0.143 0.018"/>
+  <xacro:property name="chest_visual_xyz" value="-0.1558 0.100 -0.150"/>
+  <xacro:property name="chest_visual_rpy" value="1.5708 0 0"/>
+
+  <link name="lift_base_link">
+    <inertial>
+      <origin xyz="4.73422873752474E-05 -0.0175549834448497 0.663554604410052" rpy="0 0 0"/>
+      <mass value="9.62226835645811"/>
+      <inertia ixx="1.46902469912263" ixy="5.93987561355427E-07" ixz="-4.20677095704598E-07" iyy="1.49186398732285" iyz="0.00228353314938972" izz="0.0318347846677244"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/lift_link.STL"/>
+      </geometry>
+      <material name="base_gray">
+        <color rgba="0.48 0.48 0.50 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/lift_link.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="lift_carriage_link">
+    <inertial>
+      <origin xyz="-0.000616350306547827 0.0527963422581871 0.0200911724493928" rpy="0 0 0"/>
+      <mass value="2.32322406341629"/>
+      <inertia ixx="0.00730306746507745" ixy="-2.37903032819107E-06" ixz="-3.41350462110595E-08" iyy="0.0086360993179601" iyz="2.31203695353146E-06" izz="0.00642289703186833"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/plate_link.STL"/>
+      </geometry>
+      <material name="carriage_gray">
+        <color rgba="0.79216 0.81961 0.93333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/plate_link.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <link name="chest_link">
+    <!-- mrRobot: an inertial added to OpenFleX's visual-only chest cover, so
+         urdf2webots keeps the link (it drops links with neither mass nor
+         collision) and the cover shows in the simulator. -->
+    <inertial>
+      <origin xyz="0 0.1 0" rpy="0 0 0"/>
+      <mass value="0.5"/>
+      <inertia ixx="0.003" ixy="0" ixz="0" iyy="0.003" iyz="0" izz="0.003"/>
+    </inertial>
+    <visual>
+      <origin xyz="${chest_visual_xyz}" rpy="${chest_visual_rpy}"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/chest_link.STL" scale="${chest_mesh_scale}"/>
+      </geometry>
+      <material name="chest_white">
+        <color rgba="0.92 0.92 0.94 1.0"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="chest_joint" type="fixed">
+    <parent link="lift_carriage_link"/>
+    <child link="chest_link"/>
+    <origin xyz="${chest_joint_xyz}" rpy="0 0 0"/>
+  </joint>
+
+  <link name="left_link0_base">
+    <inertial>
+      <origin xyz="-0.000217889356866729 1.77635683940025E-15 -0.00249048674522957" rpy="0 0 0"/>
+      <mass value="9.81747704246809E-05"/>
+      <inertia ixx="3.57540440256581E-10" ixy="-9.13169856158479E-27" ixz="-4.43954947320602E-12" iyy="3.57928850506649E-10" iyz="-1.04375792172031E-25" izz="3.07184567827196E-10"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/left_link0_base.STL"/>
+      </geometry>
+      <material name="mount_gray_l">
+        <color rgba="0.79216 0.81961 0.93333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/left_link0_base.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="left_joint0_base" type="fixed">
+    <origin xyz="-0.075 0.14555 0.025" rpy="-1.5708 0 1.5708"/>
+    <parent link="lift_carriage_link"/>
+    <child link="left_link0_base"/>
+  </joint>
+
+  <link name="right_link0_base">
+    <inertial>
+      <origin xyz="-0.000217889356872059 2.88657986402541E-15 -0.00249048674523576" rpy="0 0 0"/>
+      <mass value="9.81747704246811E-05"/>
+      <inertia ixx="3.57540440256582E-10" ixy="1.56510003595732E-26" ixz="-4.43954947320817E-12" iyy="3.5792885050665E-10" iyz="3.12323705966021E-25" izz="3.07184567827197E-10"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/right_link0_base.STL"/>
+      </geometry>
+      <material name="mount_gray_r">
+        <color rgba="0.79216 0.81961 0.93333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://lift_slide_description/meshes/right_link0_base.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="right_joint0_base" type="fixed">
+    <origin xyz="0.075 0.14555 0.025" rpy="1.5708 0 1.5708"/>
+    <parent link="lift_carriage_link"/>
+    <child link="right_link0_base"/>
+  </joint>
+
+  <joint name="lift_joint" type="prismatic">
+    <origin xyz="$(arg plate_origin_x) $(arg plate_origin_y) $(arg plate_origin_z)" rpy="0 0 0.000"/>
+    <parent link="lift_base_link"/>
+    <child link="lift_carriage_link"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="$(arg min_height)" upper="$(arg max_height)" effort="3000.0" velocity="$(arg max_velocity_mps)"/>
+    <dynamics damping="5.0" friction="1.0"/>
+  </joint>
+
+  <xacro:if value="$(arg ros2_control)">
+    <xacro:include filename="$(find lift_slide_description)/urdf/lift_slide_ros2_control.urdf.xacro"/>
+    <xacro:lift_slide_ros2_control
+      can_interface="$(arg lift_can_interface)"
+      calibration_file="$(arg calibration_file)"
+      node_id="$(arg lift_node_id)"
+      use_fake_hardware="$(arg use_fake_hardware)"
+      min_position_m="$(arg min_height)"
+      max_position_m="$(arg max_height)"
+      max_velocity_mps="$(arg max_velocity_mps)"
+      counts_per_meter="$(arg counts_per_meter)"
+      counts_per_revolution="$(arg counts_per_revolution)"
+      profile_acceleration="$(arg profile_acceleration)"
+      profile_deceleration="$(arg profile_deceleration)"
+      homing_method="$(arg homing_method)"
+      homing_speed_mps="$(arg homing_speed_mps)"
+      homing_low_speed_ratio="$(arg homing_low_speed_ratio)"
+      homing_acceleration="$(arg homing_acceleration)"
+      homing_timeout_sec="$(arg homing_timeout_sec)"
+      homing_configure_di="$(arg homing_configure_di)"
+      lower_switch_position_m="$(arg lower_switch_position_m)"
+      home_switch_position_m="$(arg home_switch_position_m)"
+      upper_switch_position_m="$(arg upper_switch_position_m)"
+      switch_position_tolerance_m="$(arg switch_position_tolerance_m)"
+      di_active_low="$(arg di_active_low)"
+      di6_not_func="$(arg di6_not_func)"
+      di4_homing_func="$(arg di4_homing_func)"
+      di5_pot_func="$(arg di5_pot_func)"
+      home_di_channel="$(arg home_di_channel)"
+      pot_di_channel="$(arg pot_di_channel)"
+      not_di_channel="$(arg not_di_channel)"
+      invert_command="$(arg invert_command)"
+      invert_feedback="$(arg invert_feedback)"
+      command_timeout_sec="$(arg command_timeout_sec)"
+      sdo_timeout_sec="$(arg sdo_timeout_sec)"
+      feedback_poll_rate_hz="$(arg feedback_poll_rate_hz)"/>
+  </xacro:if>
+</robot>

@@ -1,0 +1,357 @@
+<?xml version="1.0"?>
+<!--
+  mrRobot: OpenFleX's wheeled-humanoid upper body on a Clearpath Husky A200.
+
+  The base is RainBot's Husky A200 (a200.urdf.xacro) built at base_scale =
+  0.85: Clearpath's wheelbase 0.512, track 0.555 and wheel radius 0.1651 become
+  0.4352, 0.47175 and 0.140335, base_link sits 0.112438 m off the ground and the
+  top plate at base_link 0.20825..0.21365. A warehouse robot is a big thing to
+  push round a kitchen; the upper body is NOT scaled with it, which is why
+  lift_xyz is derived from the plate rather than scaled (see below).
+  Everything above the plate is OpenFleX
+  (github.com/OpenFleX-Wheeled-Humanoid, vendored as openarmx_description,
+  openarmx_head_description and lift_slide_description): the lift column and
+  carriage, two 7-DOF OpenArmX arms with two-finger hands, and the 2-DOF head,
+  assembled exactly as openarmx_integrated_description assembles them : only
+  the mount of the column onto the chassis is ours.
+
+  The Webots PROTO (mrrobot_webots/protos/MrRobot.proto) is GENERATED from this
+  file at build time (mrrobot_webots/scripts/build_proto.py), so the two cannot
+  disagree: every joint becomes a motor of the same name with a
+  "<joint>_sensor" position sensor, which is what webots_ros2_control pairs
+  with the ros2_control joints below.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mrRobot">
+
+  <xacro:arg name="use_ros2_control" default="true"/>
+  <xacro:arg name="use_webots" default="true"/>
+
+  <!-- ================= dimensions, all shared with the PROTO =================
+       Every length below is Clearpath's own A200 figure multiplied by
+       base_scale, so the file still reads as the spec sheet and there is ONE
+       number to change (1.0 gives the stock Husky back). The upper body does
+       not scale: only the base does. -->
+  <xacro:property name="base_scale" value="0.85"/>
+  <xacro:property name="wheel_radius" value="${base_scale*0.1651}"/>
+  <xacro:property name="wheel_length" value="${base_scale*0.1143}"/>
+  <xacro:property name="wheel_dz" value="${base_scale*0.03282}"/>
+  <xacro:property name="wheelbase" value="${base_scale*0.5120}"/>
+  <xacro:property name="track" value="${base_scale*0.555}"/>
+  <!-- a RATIO (0.1651/0.1778), not a length: it takes the DAE's own wheel
+       radius to the A200's. base_scale multiplies it where it is used. -->
+  <xacro:property name="wheel_mesh_scale" value="0.928571"/>
+  <xacro:property name="base_x" value="${base_scale*0.98740}"/>
+  <xacro:property name="base_y" value="${base_scale*0.57090}"/>
+  <xacro:property name="base_z" value="${base_scale*0.24750}"/>
+  <!-- top_plate.dae is 6.35 mm thick and its underside sits at 0.245. -->
+  <xacro:property name="plate_z" value="${base_scale*0.245}"/>
+  <xacro:property name="plate_thick" value="${base_scale*0.00635}"/>
+
+  <!-- Where the OpenFleX lift column stands on the Husky: its foot is
+       0.1349 below lift_base_link's origin (measured off lift_link.STL), so
+       the origin sits that far above the plate's top face (0.251) for the
+       foot to bed on the plate. x = 0 puts the column body (0.045 behind,
+       0.126 ahead of its origin) mid-plate and the shoulders, 0.1455 ahead
+       of the column, over the front axle. The -90 degree yaw is OpenFleX's
+       own: the column's +y is the robot's forward.
+
+       DERIVED, not scaled: the column is OpenFleX's and does not shrink, so
+       its foot is still 0.13465 below lift_base_link whatever the base does.
+       base_scale*0.386 would put the foot at 0.1932 against a plate top of
+       0.21365 and sink the torso 17 mm into it. Deriving it instead also
+       keeps the hand-to-chassis clearance exactly as it was, which is what
+       LIFT_USABLE in arm_kinematics.py is measured against. -->
+  <xacro:property name="lift_xyz" value="0 0 ${plate_z + plate_thick + 0.13465}"/>
+  <xacro:property name="lift_rpy" value="0 0 ${-pi/2}"/>
+
+  <xacro:property name="mesh_pkg" value="package://mrrobot_description/meshes/a200"/>
+
+  <!-- The accent is the arms' green (openarmx link2.dae). These materials only
+       reach Webots (build_proto's PAINT re-states them): RViz ignores a
+       <material> on a visual whose mesh carries its own, which every a200 DAE
+       does, so the three colours are also written into the DAEs themselves. -->
+  <material name="mrRobot_shell"><color rgba="0.93 0.93 0.95 1.0"/></material>
+  <material name="mrRobot_accent"><color rgba="0.15 0.65 0.70 1.0"/></material>
+  <material name="mrRobot_trim"><color rgba="0.13 0.13 0.15 1.0"/></material>
+
+  <!-- A cheap inertial that is round enough to be stable and honest about being
+       approximate. Webots owns the real dynamics; this is for RViz and for
+       ros2_control's bookkeeping. -->
+  <xacro:macro name="box_inertia" params="mass x y z">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia ixx="${mass*(y*y+z*z)/12}" ixy="0" ixz="0"
+               iyy="${mass*(x*x+z*z)/12}" iyz="0"
+               izz="${mass*(x*x+y*y)/12}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- ========================= base ========================= -->
+  <link name="base_footprint"/>
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${wheel_radius - wheel_dz}"/>
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <geometry><mesh filename="${mesh_pkg}/base_link.dae"
+                      scale="${base_scale} ${base_scale} ${base_scale}"/></geometry>
+      <material name="mrRobot_accent"/>
+    </visual>
+    <visual>
+      <geometry><mesh filename="${mesh_pkg}/top_chassis.dae"
+                      scale="${base_scale} ${base_scale} ${base_scale}"/></geometry>
+      <material name="mrRobot_shell"/>
+    </visual>
+    <visual>
+      <origin xyz="${base_scale*0.272} 0 ${base_scale*0.243}"/>
+      <geometry><mesh filename="${mesh_pkg}/user_rail.dae"
+                      scale="${base_scale} ${base_scale} ${base_scale}"/></geometry>
+      <material name="mrRobot_trim"/>
+    </visual>
+    <visual>
+      <origin xyz="${base_scale*0.0812} 0 ${plate_z}"/>
+      <geometry><mesh filename="${mesh_pkg}/top_plate.dae"
+                      scale="${base_scale} ${base_scale} ${base_scale}"/></geometry>
+      <material name="mrRobot_shell"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 ${base_z/4}"/>
+      <geometry><box size="${base_x} ${base_y} ${base_z/2}"/></geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 0 ${base_z*3/4 - base_scale*0.01}"/>
+      <geometry><box size="${base_x*4/5} ${base_y} ${base_z/2 - base_scale*0.02}"/></geometry>
+    </collision>
+    <!-- Clearpath's inertial at base_scale (mass x s^3, inertia x s^5),
+         except the centre of mass, which is measured: a skid-steer pivots
+         where its wheels' friction balances, and with Clearpath's (-0.00065,
+         -0.085, 0.062) under a front-heavy upper body every turn on the spot
+         carried the robot 0.4 m sideways, invisible to wheel odometry. The
+         number's job is to put the WHOLE robot's centre of mass over the
+         wheel centre; at full size -0.105 did that (combined x -0.0033) and
+         gave 2-8 cm of drift per 85 degree spin against supervisor ground
+         truth (-0.09 drifted 7-10 cm, -0.14 put the pivot 10-25 cm behind).
+         Shrinking the base does NOT scale this, and it does not follow the
+         mass balance either: solving base+body for the same combined centre
+         gives -0.168, and measured that put the pivot 6 cm BEHIND the axle.
+         What it does is move the pivot about 1:1 over most of its range and
+         then very steeply near zero (measured, six values: -0.1126 -> pivot
+         +0.095, -0.1605 -> +0.039, -0.166 -> -0.026, -0.1743 -> -0.059,
+         -0.2077 -> -0.093, -0.30 -> -0.092). -0.166 leaves 3.6-3.8 cm of
+         sideways carry per quarter turn, repeatable to a millimetre over
+         three goes, and 1.7-3.2 cm net over a whole turn. A pivot offset
+         cancels round a full circle, which is how we know it is one.
+         Re-measure against the simulator's ground truth whenever either body's
+         mass changes. -->
+    <inertial>
+      <mass value="28.2706"/>
+      <origin xyz="-0.166 0 ${base_scale*0.062}"/>
+      <inertia ixx="0.26720" ixy="-0.010489" ixz="-0.053112"
+               iyy="0.771426" iyz="-0.000685" izz="0.900545"/>
+    </inertial>
+  </link>
+
+  <xacro:macro name="wheel" params="prefix sx sy">
+    <link name="${prefix}_wheel_link">
+      <visual>
+        <geometry>
+          <!-- the ratio takes the DAE to the A200's wheel; base_scale then
+               takes the A200's wheel to this robot's. y is the width, which
+               the DAE already has right, so it gets base_scale alone. -->
+          <mesh filename="${mesh_pkg}/wheel.dae"
+                scale="${base_scale*wheel_mesh_scale} ${base_scale} ${base_scale*wheel_mesh_scale}"/>
+        </geometry>
+        <material name="mrRobot_trim"/>
+      </visual>
+      <collision>
+        <origin rpy="${pi/2} 0 0"/>
+        <geometry><cylinder radius="${wheel_radius}" length="${wheel_length}"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="1.61945"/>
+        <inertia ixx="0.010946" ixy="0" ixz="0" iyy="0.019572" iyz="0" izz="0.010946"/>
+      </inertial>
+    </link>
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_wheel_link"/>
+      <origin xyz="${sx*wheelbase/2} ${sy*track/2} ${wheel_dz}"/>
+      <axis xyz="0 1 0"/>
+      <!-- effort/velocity become the Webots motor's maxTorque/maxVelocity -->
+      <limit effort="35" velocity="8"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel prefix="front_left"  sx="1"  sy="1"/>
+  <xacro:wheel prefix="front_right" sx="1"  sy="-1"/>
+  <xacro:wheel prefix="rear_left"   sx="-1" sy="1"/>
+  <xacro:wheel prefix="rear_right"  sx="-1" sy="-1"/>
+
+  <!-- ========================= OpenFleX upper body ========================= -->
+  <xacro:include filename="$(find lift_slide_description)/urdf/lift_slide_module.urdf.xacro"/>
+  <joint name="lift_base_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lift_base_link"/>
+    <origin xyz="${lift_xyz}" rpy="${lift_rpy}"/>
+  </joint>
+
+  <!-- The two arms and hands, mounted on the carriage's side bases exactly as
+       openarmx_integrated_robot.urdf.xacro mounts them (same yaml-driven
+       kinematics, limits and inertials; same hand and TCP offsets). -->
+  <xacro:include filename="$(find openarmx_description)/urdf/arm/openarmx_arm.xacro"/>
+  <xacro:include filename="$(find openarmx_description)/urdf/ee/openarmx_hand_macro.xacro"/>
+  <xacro:include filename="$(find openarmx_description)/urdf/ee/openarmx_hand.xacro"/>
+  <xacro:property name="arm_joint_limits" value="${xacro.load_yaml('$(find openarmx_description)/config/arm/v10/joint_limits.yaml')}"/>
+  <xacro:property name="arm_inertials" value="${xacro.load_yaml('$(find openarmx_description)/config/arm/v10/inertials.yaml')}"/>
+  <xacro:property name="arm_kinematics" value="${xacro.load_yaml('$(find openarmx_description)/config/arm/v10/kinematics.yaml')}"/>
+  <xacro:property name="arm_kinematics_link" value="${xacro.load_yaml('$(find openarmx_description)/config/arm/v10/kinematics_link.yaml')}"/>
+  <xacro:property name="arm_kinematics_offset" value="${xacro.load_yaml('$(find openarmx_description)/config/arm/v10/kinematics_offset.yaml')}"/>
+  <xacro:property name="hand_inertials" value="${xacro.load_yaml('$(find openarmx_description)/config/hand/openarmx_hand/inertials.yaml')}"/>
+  <xacro:property name="hand_kinematics_link" value="${xacro.load_yaml('$(find openarmx_description)/config/hand/openarmx_hand/kinematics_link.yaml')}"/>
+  <xacro:openarmx_arm arm_type="v10" arm_prefix="left_" no_prefix="false"
+    description_pkg="openarmx_description" connected_to="left_link0_base"
+    xyz="0.0 0.0 0.0" rpy="0 0 0"
+    joint_limits="${arm_joint_limits}" inertials="${arm_inertials}"
+    kinematics="${arm_kinematics}" kinematics_link="${arm_kinematics_link}"
+    kinematics_offset="${arm_kinematics_offset}"/>
+  <xacro:openarmx_arm arm_type="v10" arm_prefix="right_" no_prefix="false"
+    description_pkg="openarmx_description" connected_to="right_link0_base"
+    xyz="0.0 0.0 0.0" rpy="0 0 0"
+    joint_limits="${arm_joint_limits}" inertials="${arm_inertials}"
+    kinematics="${arm_kinematics}" kinematics_link="${arm_kinematics_link}"
+    kinematics_offset="${arm_kinematics_offset}"/>
+  <xacro:openarmx_hand connected_to="openarmx_left_link7" arm_type="v10"
+    arm_prefix="left_" ee_type="openarmx_hand" ee_inertials="${hand_inertials}"
+    ee_kinematics_link="${hand_kinematics_link}" rpy_ee="0 0 0"
+    xyz_ee="0 -0.0 0.1001" tcp_xyz="0 -0.0 0.08" tcp_rpy="0 0 0"
+    description_pkg="openarmx_description"/>
+  <xacro:openarmx_hand connected_to="openarmx_right_link7" arm_type="v10"
+    arm_prefix="right_" ee_type="openarmx_hand" ee_inertials="${hand_inertials}"
+    ee_kinematics_link="${hand_kinematics_link}" rpy_ee="0 0 0"
+    xyz_ee="0 -0.0 0.1001" tcp_xyz="0 -0.0 0.08" tcp_rpy="0 0 0"
+    description_pkg="openarmx_description"/>
+
+  <xacro:include filename="mrRobot_head.xacro"/>
+  <xacro:openflex_head parent="lift_carriage_link" xyz="0 0.14 0.1" rpy="0 0 0"/>
+
+  <!-- ========================= sensors =========================
+       RainBot's sensor set on RainBot's mounts (pickplace_arm.urdf.xacro):
+       the SICK TiM lidar under the top plate, the IMU inside the chassis, a
+       D455-class RGB-D flat on the front panel, a D405-class RGB-D on each
+       hand looking along the fingers, and a second D455 in the head's face
+       where OpenFleX's Femto Bolt went. Every camera frame here is in the
+       Webots convention (x forward, y left, z up); an *_optical_link with
+       the ROS optical rotation hangs off each for anything that wants one.
+       Depth sensors share their colour camera's frame exactly. -->
+  <!-- RealSense housings are Intel's own meshes (realsense2_description,
+       vendored into meshes/sensors with their licence), placed with Intel's
+       offsets as RainBot places them: the mesh at (zero_depth_to_glass +
+       glass_to_front, -cam_depth_py, 0) with rpy (pi/2, 0, pi/2), so the link
+       origin is the depth module's optical centre and +x is the view axis.
+       d455.stl and d405.stl are authored in millimetres. Collision is the
+       measured mesh envelope as a box, centred on the envelope. -->
+  <xacro:macro name="rgbd" params="name parent xyz rpy mesh mesh_xyz body_xyz body_size">
+    <link name="${name}_camera_link">
+      <visual><origin xyz="${mesh_xyz}" rpy="${pi/2} 0 ${pi/2}"/>
+        <geometry><mesh filename="package://mrrobot_description/meshes/sensors/${mesh}.stl"
+                        scale="0.001 0.001 0.001"/></geometry>
+        <material name="mrRobot_trim"/></visual>
+      <collision><origin xyz="${body_xyz}"/>
+        <geometry><box size="${body_size}"/></geometry></collision>
+      <xacro:box_inertia mass="0.05" x="0.03" y="0.04" z="0.04"/>
+    </link>
+    <joint name="${name}_camera_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${name}_camera_link"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+    <link name="${name}_depth_link"/>
+    <joint name="${name}_depth_joint" type="fixed">
+      <parent link="${name}_camera_link"/>
+      <child link="${name}_depth_link"/>
+    </joint>
+    <link name="${name}_camera_optical_link"/>
+    <joint name="${name}_camera_optical_joint" type="fixed">
+      <parent link="${name}_camera_link"/>
+      <child link="${name}_camera_optical_link"/>
+      <origin rpy="${-pi/2} 0 ${-pi/2}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Front RGB-D on the A200's front_bumper_mount (0.406, 0, 0.091), seated
+       against the panel: base_link (0.425, 0, 0.091) at full size, and the
+       mount travels with the chassis. The camera itself does not shrink. -->
+  <xacro:rgbd name="front" parent="base_link"
+              xyz="${base_scale*0.425} 0 ${base_scale*0.091}" rpy="0 0 0"
+              mesh="d455" mesh_xyz="0.00465 0 0"
+              body_xyz="-0.00835 0 0" body_size="0.026 0.124 0.029"/>
+  <!-- Wrist RGB-D (D405) on each OpenArmX hand, looking along +z of the hand
+       link : the approach axis: the fingers run from z 0 to 0.095 and the
+       TCP is at z 0.08, and they open along y. The hand's mounting plate is
+       57 mm wide in x, so x = 0.0285 + 0.021 seats the 42 mm housing on its
+       side, beside the finger plane, as RainBot's sits beside the Franka's.
+       rpy (0, -pi/2, 0) maps the camera's +x view axis onto hand +z. -->
+  <xacro:rgbd name="left_wrist" parent="openarmx_left_hand" xyz="0.0495 0 0.02"
+              rpy="0 ${-pi/2} 0" mesh="d405" mesh_xyz="0.0038 -0.009 0"
+              body_xyz="-0.0078 -0.009 0" body_size="0.023 0.042 0.042"/>
+  <xacro:rgbd name="right_wrist" parent="openarmx_right_hand" xyz="0.0495 0 0.02"
+              rpy="0 ${-pi/2} 0" mesh="d405" mesh_xyz="0.0038 -0.009 0"
+              body_xyz="-0.0078 -0.009 0" body_size="0.023 0.042 0.042"/>
+
+  <!-- Head RGB-D: a second D455 (the same unit as the front one) set into
+       the groove in the head's front face, where OpenFleX's Femto Bolt went.
+       Measured off DY-01_head_front_shell.STL in head_yaw_link: the face is
+       at y 0.0815, 10 mm thick, and its opening spans x -0.054..0.054 and
+       z 0.036..0.076. The housing (124 x 29 x 26 mm) sits centred at z 0.055
+       with its glass 3 mm proud of the face and the body back in the
+       opening; being 124 mm long it laps the groove's flanks by 8 mm a side
+       (a D435 would drop straight in, but this is RainBot's front unit).
+       The head faces +y, so the camera frame is yawed +90 deg to look that
+       way. -->
+  <xacro:rgbd name="head" parent="head_yaw_link" xyz="0 0.07985 0.055" rpy="0 0 ${pi/2}"
+              mesh="d455" mesh_xyz="0.00465 0 0"
+              body_xyz="-0.00835 0 0" body_size="0.026 0.124 0.029"/>
+
+  <!-- SICK TiM under the top plate: laser centre at base_link (0.3485, 0,
+       0.14529), 0.2577 m off the floor. The mesh is SICK's (sick_scan_xd,
+       vendored with its licence), in metres, with its origin at the laser
+       centre; the device hangs INVERTED under the plate, so the housing is
+       rolled by pi about the beam origin and its base plate (0.06296 above
+       the laser centre once inverted) beds against the plate's underside.
+       That bedding is what fixes z: the SICK does not shrink with the
+       chassis, so scaling 0.18204 geometrically would push the housing 4 mm
+       THROUGH the plate. x is the chassis's own and does scale. The frame
+       itself stays upright: it is where the beams originate, and the scan is
+       published in it as-is. Collision is the
+       measured mesh envelope, inverted with the housing. -->
+  <link name="lidar_link">
+    <visual><origin rpy="${pi} 0 0"/>
+      <geometry><mesh filename="package://mrrobot_description/meshes/sensors/sick_tim_5xx.stl"/></geometry>
+      <material name="mrRobot_trim"/></visual>
+    <collision><origin xyz="-0.00913 0 0.02003"/>
+      <geometry><box size="0.0763 0.0608 0.0859"/></geometry></collision>
+    <xacro:box_inertia mass="0.15" x="0.0763" y="0.0608" z="0.0859"/>
+  </link>
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <origin xyz="${base_scale*0.41} 0 ${plate_z - 0.06296}"/>
+  </joint>
+  <!-- IMU inside the chassis, on the centreline. -->
+  <link name="imu_link"/>
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 ${base_scale*0.12}"/>
+  </joint>
+
+  <xacro:if value="$(arg use_ros2_control)">
+    <xacro:include filename="mrRobot.ros2_control.xacro"/>
+  </xacro:if>
+  <xacro:if value="$(arg use_webots)">
+    <xacro:include filename="mrRobot.webots.xacro"/>
+  </xacro:if>
+</robot>

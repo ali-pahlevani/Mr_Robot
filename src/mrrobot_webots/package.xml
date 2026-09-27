@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<package format="3">
+  <name>mrrobot_webots</name>
+  <version>1.0.0</version>
+  <description>
+    Webots simulation assets for mrRobot: the kitchen world, a microwave PROTO
+    with a door the robot can work, and the robot's PROTO, generated from the
+    URDF at build time together with copies of the meshes it references (a
+    Webots PROTO cannot use package:// URIs).
+  </description>
+  <maintainer email="a.pahlevani1998@gmail.com">Ali Pahlevani</maintainer>
+  <license>MIT</license>
+  <url type="website">https://github.com/ali-pahlevani/Mr_Robot</url>
+  <url type="repository">https://github.com/ali-pahlevani/Mr_Robot.git</url>
+  <url type="bugtracker">https://github.com/ali-pahlevani/Mr_Robot/issues</url>
+  <author email="a.pahlevani1998@gmail.com">Ali Pahlevani</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- build_proto.py expands nothing itself, but it resolves package:// mesh
+       paths through the ament index, so every package the URDF references
+       must be built before this one. -->
+  <build_depend>mrrobot_description</build_depend>
+  <build_depend>openarmx_description</build_depend>
+  <build_depend>openarmx_head_description</build_depend>
+  <build_depend>lift_slide_description</build_depend>
+  <build_depend>webots_ros2_importer</build_depend>
+  <build_depend>ament_index_python</build_depend>
+
+  <exec_depend>webots_ros2_driver</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

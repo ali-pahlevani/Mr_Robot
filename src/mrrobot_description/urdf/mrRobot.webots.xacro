@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+  What webots_ros2_driver should do with this robot.
+
+  The <plugin> lines load driver plugins; each <device> maps a Webots device
+  (matched by its "reference" name, which is the name in the PROTO) onto ROS 2
+  topics. Devices not listed here are simply not published.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <webots>
+    <plugin type="webots_ros2_control::Ros2Control"/>
+
+    <!-- One sensor_msgs/Imu with orientation, rate AND acceleration filled in,
+         which is what robot_localization wants: the three separate device
+         blocks each publish an Imu with only their own field set. -->
+    <plugin type="webots_ros2_driver::Ros2IMU">
+      <enabled>true</enabled>
+      <topicName>/imu</topicName>
+      <alwaysOn>true</alwaysOn>
+      <frameName>imu_link</frameName>
+      <inertialUnitName>imu</inertialUnitName>
+      <gyroName>gyro</gyroName>
+      <accelerometerName>accelerometer</accelerometerName>
+    </plugin>
+
+    <!-- Ground truth, for measuring only: the true pose of the robot and of the
+         DEF-named jars, from the Webots supervisor API. Nothing in the control
+         path subscribes to it. -->
+    <plugin type="mrrobot_perception.ground_truth.GroundTruth"/>
+
+    <device reference="lidar" type="Lidar">
+      <ros>
+        <topicName>/scan</topicName>
+        <alwaysOn>true</alwaysOn>
+        <frameName>lidar_link</frameName>
+      </ros>
+    </device>
+
+    <device reference="gps" type="GPS">
+      <ros>
+        <topicName>/gps</topicName>
+        <alwaysOn>true</alwaysOn>
+        <frameName>base_link</frameName>
+      </ros>
+    </device>
+
+    <!-- Head RGB-D: the colour camera and the depth sensor share one pose. -->
+    <device reference="head_camera" type="Camera">
+      <ros>
+        <topicName>/head_camera</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>15</updateRate>
+        <frameName>head_camera_link</frameName>
+      </ros>
+    </device>
+    <!-- Publishes <topic>/image (32FC1 metres) and <topic>/camera_info; the
+         driver only builds <topic>/point_cloud while something subscribes to
+         it, and nothing here does: 320x240 points at 60 Hz is 70 MB/s for a
+         detector that only ever wants one pixel's depth. -->
+    <device reference="head_depth" type="RangeFinder">
+      <ros>
+        <topicName>/head_depth</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>15</updateRate>
+        <frameName>head_depth_link</frameName>
+      </ros>
+    </device>
+    <!-- Front RGB-D (RainBot's D455 slot) and the eye-in-hand RGB-Ds
+         (RainBot's D405). All on, at the rates RainBot runs them: 10 Hz for
+         the front pair, 5 Hz for the wrists; four 640x480 streams at the
+         simulator's 60 Hz would be 300 MB/s for nothing. -->
+    <device reference="front_camera" type="Camera">
+      <ros>
+        <topicName>/front_camera</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>10</updateRate>
+        <frameName>front_camera_link</frameName>
+      </ros>
+    </device>
+    <device reference="front_depth" type="RangeFinder">
+      <ros>
+        <topicName>/front_depth</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>10</updateRate>
+        <frameName>front_depth_link</frameName>
+      </ros>
+    </device>
+    <device reference="left_wrist_camera" type="Camera">
+      <ros>
+        <topicName>/left_wrist_camera</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>5</updateRate>
+        <frameName>left_wrist_camera_link</frameName>
+      </ros>
+    </device>
+    <device reference="left_wrist_depth" type="RangeFinder">
+      <ros>
+        <topicName>/left_wrist_depth</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>5</updateRate>
+        <frameName>left_wrist_depth_link</frameName>
+      </ros>
+    </device>
+    <device reference="right_wrist_camera" type="Camera">
+      <ros>
+        <topicName>/right_wrist_camera</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>5</updateRate>
+        <frameName>right_wrist_camera_link</frameName>
+      </ros>
+    </device>
+    <device reference="right_wrist_depth" type="RangeFinder">
+      <ros>
+        <topicName>/right_wrist_depth</topicName>
+        <alwaysOn>true</alwaysOn>
+        <updateRate>5</updateRate>
+        <frameName>right_wrist_depth_link</frameName>
+      </ros>
+    </device>
+  </webots>
+</robot>

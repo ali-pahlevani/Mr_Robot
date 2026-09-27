@@ -1,0 +1,182 @@
+# The kitchen errand: honey jar into the microwave, jam jar onto the table.
+#
+# The mission node is an interpreter over `steps`; a second errand is a
+# second file (mission_file:=... on the launch). World coordinates are map
+# coordinates (the map is aligned with the Webots world, see
+# mrrobot_navigation/maps/README.md). Objects are found by the colour
+# detector; fixtures are furniture and do not move.
+#
+# Stations (see `stations` below): the dock is worked out from where the
+# target really is and approached in one forward curve. All counter stations
+# face the counter head-on: the OpenArmX shoulders sit ahead of the axles,
+# so a base whose nose is near the plinth puts both hands over the worktop.
+#
+# Hands: the LEFT hand takes the honey jar and keeps it while the RIGHT hand
+# works the microwave door: the jar is never put down and the door is
+# opened only when the jar is already there to go in. The jam jar is the
+# left hand's too (see the jam station), and so the table station puts the
+# table spot on the robot's left.
+
+# `near` (x, y, z, radius): where the errand expects the object -- the head
+# looks there before it sweeps, and the kitchen has two jam jars, of which
+# the one wanted stands to the right of the microwave.
+objects:
+  honey: {radius: 0.045, height: 0.115, near: [1.75, 0.70, 0.95, 0.40]}
+  jam:   {radius: 0.045, height: 0.115, near: [1.75, -0.30, 0.95, 0.40]}
+
+fixtures:
+  microwave_in:     [1.60, 0.15, 1.03]      # jar axis, mid-height, 1 cm above the cavity floor (0.96)
+  microwave_handle: [1.465, 0.15, 1.131]    # centre of the door's handle bar
+  microwave_hinge:  [1.50, 0.15, 0.966]     # the door's hinge axis (along y)
+  # jar axis, mid-height, table's NE corner: the top is at 0.74 and the jar
+  # is let go 1 cm over it, as over the microwave's floor -- set down onto
+  # it exactly, the jar's box met the table's in the scene and the straight
+  # descent was refused at 83 % every time (measured)
+  table_spot:       [-0.25, -0.60, 0.81]
+
+# The planning scene (without it the first plan swept the left arm
+# through the worktop). Boxes in map coordinates, centre and size; the
+# mission re-expresses them in base_link after every docking. Each counter
+# is two bodies: the cabinet, which the mission clamps to the bumper when
+# the pose estimate would put it inside the chassis, and the worktop slab,
+# which overhangs the plinth and may sit over the nose (the base's top is
+# 0.5 m below it) -- modelled 3 cm proud and 1 cm taller than it is (top at
+# 0.90; the real top is 0.89), because a 1 cm slice of it left unmodelled
+# was enough to push a wrist to its stop, while 3.5 cm extra swallowed the
+# 2.7 cm between the worktop and the pads at a jar's mid-height.
+# The microwave is five slabs round an open cavity so a jar can be planned
+# INTO it; the door (and the bar under it) is added by the mission once it
+# is open, tilted to where it lies. The slabs start at the door's INNER
+# face (x 1.50), not its outer one (1.475): the closed door is not in the
+# scene while a hand works on it, and with the ceiling slab drawn 2.5 cm
+# forward the open upper finger clipped it in the last 2 cm of the
+# approach to the handle, one time in two (measured).
+scene:
+  east_cabinet:    {center: [1.80, -0.01, 0.43],  size: [0.70, 1.98, 0.86]}
+  east_worktop:    {center: [1.79, -0.01, 0.875],  size: [0.76, 2.04, 0.05]}
+  north_cabinet:   {center: [0.65, 1.32, 0.43],   size: [2.00, 0.67, 0.86]}
+  north_worktop:   {center: [0.65, 1.30, 0.875],  size: [2.06, 0.75, 0.05]}
+  microwave_top:   {center: [1.6125, 0.15, 1.154],  size: [0.225, 0.53, 0.016]}   # cavity ceiling 1.146; the handle is 1.5 cm under it
+  microwave_floor: {center: [1.6125, 0.15, 0.945],  size: [0.225, 0.53, 0.030]}
+  microwave_left:  {center: [1.6125, 0.40, 1.026],  size: [0.225, 0.03, 0.272]}
+  microwave_right: {center: [1.6125, -0.10, 1.026], size: [0.225, 0.03, 0.272]}
+  microwave_back:  {center: [1.712, 0.15, 1.026], size: [0.025, 0.53, 0.272]}
+  dining_table:    {center: [-0.65, -1.43, 0.71], size: [1.00, 1.80, 0.06]}
+
+stations:
+  # A station is where the base docks for one job: its `target` (an object,
+  # found by the camera, or a fixture) and where that target must then sit
+  # in base_link -- `at`, [ahead, left] in metres -- with the base facing
+  # `heading` (degrees, map). The dock is worked out from the target's real
+  # position and approached in one curve (mission.come_in); the numbers are
+  # where the arm's grip has worked, averaged over the good runs.
+  #
+  # The jars 0.77 m ahead and 0.37 m to the left: 15-16 cm outboard of the
+  # left shoulder, the middle of the band the forward grip has IK in
+  # (12-16 cm, measured over many picks; 18 cm made the climb after the
+  # grasp run out of IK), and 6 cm of floor before the plinth.
+  honey:     {target: {object: honey}, at: [0.77, 0.37], heading: 0}
+  # The handle 0.70 m ahead (the door's standoff: 0.55 too near for the
+  # grip's IK, 0.745 too far, measured; closing, the palm under the flat
+  # door's bar 13 cm nearer, works from the same spot, and 0.75 lost the top
+  # of the arc) and 10.5 cm right of the centre --
+  # 11 cm inboard of the right shoulder; on the robot's centre line the
+  # right arm cannot reach it at that height. `slide`: the bar is 41 cm long
+  # and the hand grips it anywhere 6 cm or more from its ends, so the dock
+  # may move up to 13 cm either way along it to line up with wherever the
+  # base already stands (mission.slide_for): from the honey's dock it is
+  # straight behind.
+  microwave: {target: {fixture: microwave_handle}, at: [0.70, -0.105], heading: 0,
+              slide: [-0.13, 0.13]}
+  # The cavity for the LEFT hand, 15 cm outboard of its shoulder as the
+  # jars are: from the door's dock, facing it, it is 37 cm inboard, across
+  # the body, where the arm has no IK (measured). `headings`: the dock may
+  # face the counter from 20 to 35 deg right, and takes the heading that
+  # one forward curve reaches from where the door was let go of, backed
+  # straight out a little first (mission.face_for) -- about 30 deg, 20 cm
+  # back; the jar then goes into the 47 cm wide mouth at that angle, 10 cm
+  # clear of its edges, and the base turns back to the door's dock to
+  # close it. `relocalize: runup`: facing the counter at that angle the
+  # lidar cannot see the north counter and the scan matcher slides along
+  # the east one (7-9 cm, scoring a good fit, measured); the match is made
+  # square on before the curve, and the dock dead-reckoned from it.
+  microwave_in: {target: {fixture: microwave_in}, at: [0.77, 0.36], heading: 0,
+                 headings: [-35, -20], relocalize: runup}
+  # The jam jar (y -0.30) for the left hand, as the honey is; the right
+  # hand's open fingers would pass 1 cm from the microwave's side wall. A
+  # shorter run-up: a spin further out would sweep the chair backs by the
+  # dining table (x 0.07). Backing straight out needs no spin, and 0.40 m
+  # of it (`back_room`) still keeps the rear 9 cm off them: a hop that lands
+  # 5-10 cm off the line is then taken out by one curve, where the 0.25 m
+  # run-up allowed 5.5 cm and it hopped again (measured). `leg_match:
+  # false`: the hop here ends its straight leg facing south, at walls the
+  # map has from 3 m away and the dining set's scanned legs, and a scan
+  # match there came out 5-9 cm wrong while scoring well (measured); the
+  # last turn is aimed on odometry, and the run-up point's match, facing
+  # the counter, is good.
+  jam:       {target: {object: jam}, at: [0.77, 0.37], heading: 0, runup: 0.25,
+              back_room: 0.40, leg_match: false}
+  # Beside the table's NE corner, facing west along its north edge: the
+  # chassis stays east of the table and clear of the chairs, and the spot
+  # is 0.62 m ahead and 0.49 m to the left -- a sideways reach, with the jar
+  # coming down from above (the forward grip has IK for it with the
+  # shoulder 0.30 m above the spot). Facing the north edge put a chair
+  # under the base and the chassis corner into the table's leg.
+  # The scan matcher's map has the dining set as its legs (maps/
+  # kitchen_reloc.*): against the costmaps' solid block every fit by the
+  # table was refused. Its fits here still score 4-5 cm (chair legs the map
+  # has not got) and are taken because they are pinned down (the matcher's
+  # max_fit_pinned). Should one be refused anyway, the dock and the place go
+  # by dead reckoning from the last fit that was not (mission.base_pose).
+  table:     {target: {fixture: table_spot}, at: [0.62, 0.49], heading: 180}
+
+# what a retry does is fixed in code: goto clears the costmaps and
+# re-sends; find sweeps again; pick re-finds and grasps again; place and
+# door re-approach.
+retries: {goto: 2, find: 3, pick: 2, place: 2, door: 2}
+
+steps:
+  - {do: posture, name: tuck}
+  - {do: goto, station: honey}
+  - {do: find, object: honey, hand: left}
+  - {do: pick, object: honey, hand: left}
+  - {do: goto, station: microwave}
+  - {do: door, hand: right, open: true}
+  # The cavity is 18.6 cm tall (0.96 to 1.146) and the open door's bar hangs
+  # under the flat door at 0.943: the 11.5 cm jar goes in with its bottom
+  # 5 cm over the bar and its top 3 cm under the ceiling (the pre-place 1 cm
+  # up; at 4 cm the top was at the ceiling and the descent at the mouth
+  # grazed the slab's edge, measured) and comes down to 5 mm over the
+  # floor before it is let go (from 2 cm it landed on its side, once).
+  # 20 cm out: the jar's front then starts 3 cm before the cavity mouth --
+  # at 17 it started at the mouth, and with a centimetre or two of pose
+  # error the descent set it on the top slab's edge (measured); at 22 the
+  # hover, which cannot be planned nearer the body than 0.64 m, was 8 cm
+  # ahead of it and the slanting descent ran out of IK. lead_in [0, 0.15]:
+  # the arm takes the pre-place pose with the column 15 cm higher, so the
+  # jar swings in well above the open door, and the column then lowers it
+  # straight onto the mouth (arms.place) -- the one-motion reach straight
+  # to the pre-place dipped under its plan and lifted the door with the jar,
+  # and a way in short of the door's tip has no IK at that height (measured).
+  # hover_lift: for the fallback reach (arms.reach_out) only.
+  - {do: goto, station: microwave_in}
+  # shoulder_above 0.25: with the shoulder only 0.13 m above the spot the
+  # column-up hover, capped below the shoulder, left the hand 4 cm under
+  # the pre-place point once the column came down -- the jar 1 cm over
+  # the open door's bar, and any tilt a collision (measured).
+  # retreat: retrace -- the open hand comes out of the cavity by the joint
+  # path it went in on, run backwards (arms.retrace), and the base stays
+  # where the door is closed from, a turn away.
+  - {do: place, at: microwave_in, hand: left, approach: [-0.20, 0, 0.01], above: 0.005,
+     shoulder_above: 0.25, lead_in: [0.0, 0.15], hover_lift: 0.25, retreat: retrace}
+  - {do: goto, station: microwave}
+  - {do: door, hand: right, open: false}
+  - {do: goto, station: jam}
+  - {do: find, object: jam, hand: left}
+  - {do: pick, object: jam, hand: left}
+  - {do: goto, station: table}
+  # shoulder_above 0.30: with the shoulder 0.35 m above the spot the arm
+  # had no IK for the last 2 cm of the straight set-down, and the planned
+  # fallback cost 4 s every run (IK over the column's height, measured).
+  - {do: place, at: table_spot, hand: left, approach: [0, 0, 0.10], shoulder_above: 0.30}
+  - {do: posture, name: tuck}

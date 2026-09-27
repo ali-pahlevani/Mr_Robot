@@ -1,0 +1,210 @@
+[INFO] [launch]: All log files can be found below /home/maedeh/.ros/log/2026-09-14-05-46-51-828070-maedeh-64524
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [webots-1]: process started with pid [64530]
+[INFO] [ros2_supervisor.py-2]: process started with pid [64532]
+[INFO] [webots_controller_HomeBot-3]: process started with pid [64535]
+[INFO] [robot_state_publisher-4]: process started with pid [64538]
+[INFO] [ros2-5]: process started with pid [64541]
+[INFO] [ros2-6]: process started with pid [64544]
+[INFO] [ros2-7]: process started with pid [64546]
+[INFO] [ros2-8]: process started with pid [64548]
+[INFO] [ros2-9]: process started with pid [64550]
+[INFO] [ros2-10]: process started with pid [64553]
+[INFO] [ros2-11]: process started with pid [64555]
+[INFO] [ros2-12]: process started with pid [64557]
+[INFO] [posture-13]: process started with pid [64559]
+[INFO] [mission-14]: process started with pid [64562]
+[robot_state_publisher-4] [INFO] [1789379212.066485904] [robot_state_publisher]: got segment base_footprint
+[robot_state_publisher-4] [INFO] [1789379212.066679652] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-4] [INFO] [1789379212.066700251] [robot_state_publisher]: got segment front_left_wheel_link
+[robot_state_publisher-4] [INFO] [1789379212.066707215] [robot_state_publisher]: got segment front_right_wheel_link
+[robot_state_publisher-4] [INFO] [1789379212.066713016] [robot_state_publisher]: got segment head_camera_link
+[robot_state_publisher-4] [INFO] [1789379212.066718556] [robot_state_publisher]: got segment head_link
+[robot_state_publisher-4] [INFO] [1789379212.066724197] [robot_state_publisher]: got segment imu_link
+[robot_state_publisher-4] [INFO] [1789379212.066729427] [robot_state_publisher]: got segment left_finger_1_link
+[robot_state_publisher-4] [INFO] [1789379212.066734988] [robot_state_publisher]: got segment left_finger_2_link
+[robot_state_publisher-4] [INFO] [1789379212.066740237] [robot_state_publisher]: got segment left_forearm_link
+[robot_state_publisher-4] [INFO] [1789379212.066745718] [robot_state_publisher]: got segment left_hand_link
+[robot_state_publisher-4] [INFO] [1789379212.066750948] [robot_state_publisher]: got segment left_shoulder_pitch_link
+[robot_state_publisher-4] [INFO] [1789379212.066756538] [robot_state_publisher]: got segment left_shoulder_roll_link
+[robot_state_publisher-4] [INFO] [1789379212.066761929] [robot_state_publisher]: got segment left_upper_arm_link
+[robot_state_publisher-4] [INFO] [1789379212.066767870] [robot_state_publisher]: got segment left_wrist_link
+[robot_state_publisher-4] [INFO] [1789379212.066773801] [robot_state_publisher]: got segment lidar_link
+[robot_state_publisher-4] [INFO] [1789379212.066779252] [robot_state_publisher]: got segment neck_link
+[robot_state_publisher-4] [INFO] [1789379212.066785413] [robot_state_publisher]: got segment rear_left_wheel_link
+[robot_state_publisher-4] [INFO] [1789379212.066791355] [robot_state_publisher]: got segment rear_right_wheel_link
+[robot_state_publisher-4] [INFO] [1789379212.066798027] [robot_state_publisher]: got segment right_finger_1_link
+[robot_state_publisher-4] [INFO] [1789379212.066804059] [robot_state_publisher]: got segment right_finger_2_link
+[robot_state_publisher-4] [INFO] [1789379212.066809619] [robot_state_publisher]: got segment right_forearm_link
+[robot_state_publisher-4] [INFO] [1789379212.066814940] [robot_state_publisher]: got segment right_hand_link
+[robot_state_publisher-4] [INFO] [1789379212.066820771] [robot_state_publisher]: got segment right_shoulder_pitch_link
+[robot_state_publisher-4] [INFO] [1789379212.066826401] [robot_state_publisher]: got segment right_shoulder_roll_link
+[robot_state_publisher-4] [INFO] [1789379212.066832012] [robot_state_publisher]: got segment right_upper_arm_link
+[robot_state_publisher-4] [INFO] [1789379212.066838064] [robot_state_publisher]: got segment right_wrist_link
+[robot_state_publisher-4] [INFO] [1789379212.066843704] [robot_state_publisher]: got segment torso_link
+[robot_state_publisher-4] [INFO] [1789379212.066850167] [robot_state_publisher]: got segment wrist_camera_link
+[posture-13] [INFO] [1789379212.263229323] [homebot_posture]: ready; postures: carry, reach, ready, stow, wave
+[mission-14] [INFO] [1789379212.718259419] [homebot_posture]: ready; postures: carry, reach, ready, stow, wave
+[ros2-5] [INFO] [1789379212.794821086] [spawner_joint_state_broadcaster]: waiting for service /controller_manager/list_controllers to become available...
+[webots_controller_HomeBot-3] The Webots simulation world is not yet ready, pending until loading is done...
+[ros2_supervisor.py-2] The Webots simulation world is not yet ready, pending until loading is done...
+[ros2-11] [INFO] [1789379212.801517439] [spawner_left_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2-7] [INFO] [1789379212.805469104] [spawner_torso_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2-8] [INFO] [1789379212.805707287] [spawner_head_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2-12] [INFO] [1789379212.805801406] [spawner_right_gripper_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2-10] [INFO] [1789379212.808945635] [spawner_right_arm_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2-9] [INFO] [1789379212.809464972] [spawner_left_arm_controller]: waiting for service /controller_manager/list_controllers to become available...
+[ros2-6] [INFO] [1789379212.813348387] [spawner_base_controller]: waiting for service /controller_manager/list_controllers to become available...
+[webots_controller_HomeBot-3] [INFO] [1789379217.194897249] [resource_manager]: Initialize hardware 'HomeBotWebotsSystem' 
+[webots_controller_HomeBot-3] [INFO] [1789379217.195006016] [resource_manager]: Successful initialization of hardware 'HomeBotWebotsSystem'
+[webots_controller_HomeBot-3] [INFO] [1789379217.195071310] [resource_manager]: 'configure' hardware 'HomeBotWebotsSystem' 
+[webots_controller_HomeBot-3] [INFO] [1789379217.195077382] [resource_manager]: Successful 'configure' of hardware 'HomeBotWebotsSystem'
+[webots_controller_HomeBot-3] [INFO] [1789379217.195088152] [resource_manager]: 'activate' hardware 'HomeBotWebotsSystem' 
+[webots_controller_HomeBot-3] [INFO] [1789379217.195092220] [resource_manager]: Successful 'activate' of hardware 'HomeBotWebotsSystem'
+[webots_controller_HomeBot-3] [INFO] [1789379217.208750599] [HomeBot]: Controller successfully connected to robot in Webots simulation.
+[webots_controller_HomeBot-3] [INFO] [1789379217.303401290] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[ros2-5] [INFO] [1789379217.313113356] [spawner_joint_state_broadcaster]: [94mLoaded [1mjoint_state_broadcaster[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.314154446] [controller_manager]: Loading controller 'head_controller'
+[webots_controller_HomeBot-3] [WARN] [1789379217.321618127] [head_controller]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[webots_controller_HomeBot-3] [INFO] [1789379217.324212629] [controller_manager]: Loading controller 'left_gripper_controller'
+[ros2-8] [INFO] [1789379217.325152877] [spawner_head_controller]: [94mLoaded [1mhead_controller[0m
+[webots_controller_HomeBot-3] [WARN] [1789379217.330804332] [left_gripper_controller]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[webots_controller_HomeBot-3] [INFO] [1789379217.337295184] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[webots_controller_HomeBot-3] [INFO] [1789379217.337441862] [joint_state_broadcaster]: 'joints' or 'interfaces' parameter is empty. All available state interfaces will be published
+[ros2-11] [INFO] [1789379217.338613691] [spawner_left_gripper_controller]: [94mLoaded [1mleft_gripper_controller[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.350252740] [controller_manager]: Loading controller 'right_gripper_controller'
+[webots_controller_HomeBot-3] [WARN] [1789379217.357144143] [right_gripper_controller]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[webots_controller_HomeBot-3] [INFO] [1789379217.362567074] [controller_manager]: Configuring controller 'head_controller'
+[webots_controller_HomeBot-3] [INFO] [1789379217.362756434] [head_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[webots_controller_HomeBot-3] [INFO] [1789379217.362792121] [head_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[webots_controller_HomeBot-3] [INFO] [1789379217.362826737] [head_controller]: Using 'splines' interpolation method.
+[ros2-12] [INFO] [1789379217.363358268] [spawner_right_gripper_controller]: [94mLoaded [1mright_gripper_controller[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.363847859] [head_controller]: Controller state will be published at 50.00 Hz.
+[webots_controller_HomeBot-3] [INFO] [1789379217.365309839] [head_controller]: Action status changes will be monitored at 20.00 Hz.
+[webots_controller_HomeBot-3] [INFO] [1789379217.377004173] [controller_manager]: Loading controller 'torso_controller'
+[webots_controller_HomeBot-3] [WARN] [1789379217.383581409] [torso_controller]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[webots_controller_HomeBot-3] [INFO] [1789379217.391325693] [controller_manager]: Configuring controller 'left_gripper_controller'
+[webots_controller_HomeBot-3] [INFO] [1789379217.391465539] [left_gripper_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[webots_controller_HomeBot-3] [INFO] [1789379217.391513170] [left_gripper_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[webots_controller_HomeBot-3] [INFO] [1789379217.391548026] [left_gripper_controller]: Using 'splines' interpolation method.
+[webots_controller_HomeBot-3] [INFO] [1789379217.392213982] [left_gripper_controller]: Controller state will be published at 50.00 Hz.
+[ros2-7] [INFO] [1789379217.392342306] [spawner_torso_controller]: [94mLoaded [1mtorso_controller[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.393527970] [left_gripper_controller]: Action status changes will be monitored at 20.00 Hz.
+[webots_controller_HomeBot-3] [INFO] [1789379217.436721144] [controller_manager]: Loading controller 'right_arm_controller'
+[ros2-5] [INFO] [1789379217.437688514] [spawner_joint_state_broadcaster]: [92mConfigured and activated [1mjoint_state_broadcaster[0m
+[webots_controller_HomeBot-3] [WARN] [1789379217.445519463] [right_arm_controller]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[webots_controller_HomeBot-3] [INFO] [1789379217.453564840] [controller_manager]: Configuring controller 'right_gripper_controller'
+[webots_controller_HomeBot-3] [INFO] [1789379217.453754100] [right_gripper_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[webots_controller_HomeBot-3] [INFO] [1789379217.453785429] [right_gripper_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[webots_controller_HomeBot-3] [INFO] [1789379217.453808743] [right_gripper_controller]: Using 'splines' interpolation method.
+[webots_controller_HomeBot-3] [INFO] [1789379217.454669049] [right_gripper_controller]: Controller state will be published at 50.00 Hz.
+[ros2-10] [INFO] [1789379217.454850634] [spawner_right_arm_controller]: [94mLoaded [1mright_arm_controller[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.455972918] [right_gripper_controller]: Action status changes will be monitored at 20.00 Hz.
+[webots_controller_HomeBot-3] [INFO] [1789379217.505091168] [controller_manager]: Loading controller 'left_arm_controller'
+[ros2-8] [INFO] [1789379217.505631966] [spawner_head_controller]: [92mConfigured and activated [1mhead_controller[0m
+[webots_controller_HomeBot-3] [WARN] [1789379217.514653729] [left_arm_controller]: [Deprecated]: "allow_nonzero_velocity_at_trajectory_end" is set to true. The default behavior will change to false.
+[webots_controller_HomeBot-3] [INFO] [1789379217.522033701] [controller_manager]: Configuring controller 'torso_controller'
+[webots_controller_HomeBot-3] [INFO] [1789379217.522141746] [torso_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[webots_controller_HomeBot-3] [INFO] [1789379217.522161003] [torso_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[webots_controller_HomeBot-3] [INFO] [1789379217.522174358] [torso_controller]: Using 'splines' interpolation method.
+[webots_controller_HomeBot-3] [INFO] [1789379217.522800228] [torso_controller]: Controller state will be published at 50.00 Hz.
+[ros2-9] [INFO] [1789379217.523229384] [spawner_left_arm_controller]: [94mLoaded [1mleft_arm_controller[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.524137651] [torso_controller]: Action status changes will be monitored at 20.00 Hz.
+[webots_controller_HomeBot-3] [INFO] [1789379217.575804517] [controller_manager]: Loading controller 'base_controller'
+[ros2-11] [INFO] [1789379217.576660654] [spawner_left_gripper_controller]: [92mConfigured and activated [1mleft_gripper_controller[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.592284691] [controller_manager]: Configuring controller 'right_arm_controller'
+[webots_controller_HomeBot-3] [INFO] [1789379217.592520048] [right_arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[webots_controller_HomeBot-3] [INFO] [1789379217.592544344] [right_arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[webots_controller_HomeBot-3] [INFO] [1789379217.592562289] [right_arm_controller]: Using 'splines' interpolation method.
+[webots_controller_HomeBot-3] [INFO] [1789379217.593387357] [right_arm_controller]: Controller state will be published at 50.00 Hz.
+[ros2-6] [INFO] [1789379217.593576958] [spawner_base_controller]: [94mLoaded [1mbase_controller[0m
+[INFO] [ros2-5]: process has finished cleanly [pid 64541]
+[webots_controller_HomeBot-3] [INFO] [1789379217.594909221] [right_arm_controller]: Action status changes will be monitored at 20.00 Hz.
+[webots_controller_HomeBot-3] [INFO] [1789379217.639659065] [controller_manager]: Configuring controller 'left_arm_controller'
+[webots_controller_HomeBot-3] [INFO] [1789379217.639881908] [left_arm_controller]: No specific joint names are used for command interfaces. Using 'joints' parameter.
+[webots_controller_HomeBot-3] [INFO] [1789379217.639904161] [left_arm_controller]: Command interfaces are [position] and state interfaces are [position velocity].
+[webots_controller_HomeBot-3] [INFO] [1789379217.639921634] [left_arm_controller]: Using 'splines' interpolation method.
+[ros2-12] [INFO] [1789379217.640408640] [spawner_right_gripper_controller]: [92mConfigured and activated [1mright_gripper_controller[0m
+[webots_controller_HomeBot-3] [INFO] [1789379217.640539739] [left_arm_controller]: Controller state will be published at 50.00 Hz.
+[webots_controller_HomeBot-3] [INFO] [1789379217.642053758] [left_arm_controller]: Action status changes will be monitored at 20.00 Hz.
+[INFO] [ros2-8]: process has finished cleanly [pid 64548]
+[webots_controller_HomeBot-3] [INFO] [1789379217.682566435] [controller_manager]: Configuring controller 'base_controller'
+[ros2-7] [INFO] [1789379217.683131410] [spawner_torso_controller]: [92mConfigured and activated [1mtorso_controller[0m
+[INFO] [ros2-11]: process has finished cleanly [pid 64555]
+[ros2-10] [INFO] [1789379217.730531873] [spawner_right_arm_controller]: [92mConfigured and activated [1mright_arm_controller[0m
+[ros2-9] [INFO] [1789379217.764146415] [spawner_left_arm_controller]: [92mConfigured and activated [1mleft_arm_controller[0m
+[INFO] [ros2-12]: process has finished cleanly [pid 64557]
+[ros2-6] [INFO] [1789379217.799432425] [spawner_base_controller]: [92mConfigured and activated [1mbase_controller[0m
+[INFO] [ros2-7]: process has finished cleanly [pid 64546]
+[INFO] [ros2-10]: process has finished cleanly [pid 64553]
+[INFO] [ros2-9]: process has finished cleanly [pid 64550]
+[INFO] [ros2-6]: process has finished cleanly [pid 64544]
+[mission-14] [INFO] [1789379218.187135305] [homebot_posture]: 1/6 driving to the microwave
+[mission-14] [INFO] [1789379218.187810940] [homebot_posture]: posture -> carry
+[mission-14] [INFO] [1789379243.169787538] [homebot_posture]: 2/6 opening the door
+[mission-14] [INFO] [1789379254.618415821] [homebot_posture]: posture -> carry
+[mission-14] [INFO] [1789379257.209540015] [homebot_posture]: 3/6 fetching the honey jar
+[mission-14] [INFO] [1789379294.708292860] [homebot_posture]: 4/6 putting it in the microwave
+[mission-14] [INFO] [1789379327.380657903] [homebot_posture]: 5/6 closing the door
+[mission-14] [INFO] [1789379339.642931595] [homebot_posture]: posture -> carry
+[mission-14] [INFO] [1789379342.230555318] [homebot_posture]: 6/6 jam jar to the table
+[mission-14] [INFO] [1789379399.956521824] [homebot_posture]: posture -> carry
+[mission-14] [INFO] [1789379402.014377130] [homebot_posture]: done
+[webots_controller_HomeBot-3] [INFO] [1789379405.259540246] [rclcpp]: signal_handler(signum=2)
+[robot_state_publisher-4] [INFO] [1789379405.259586113] [rclcpp]: signal_handler(signum=2)
+[ERROR] [ros2_supervisor.py-2]: process has died [pid 64532, exit code -2, cmd '/opt/ros/humble/lib/webots_ros2_driver/ros2_supervisor.py --ros-args -r __ns:=/Ros2Supervisor -r /Ros2Supervisor/clock:=/clock'].
+[INFO] [ros2_supervisor.py-2]: process started with pid [66534]
+[webots_controller_HomeBot-3] realloc(): invalid old size
+[mission-14] Traceback (most recent call last):
+[mission-14]   File "/home/maedeh/HomeBot/build/homebot_control/homebot_control/mission_node.py", line 391, in main
+[mission-14]     rclpy.spin(node)
+[mission-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[mission-14]     executor.spin_once()
+[mission-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 751, in spin_once
+[mission-14]     self._spin_once_impl(timeout_sec)
+[mission-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 740, in _spin_once_impl
+[mission-14]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[mission-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 723, in wait_for_ready_callbacks
+[mission-14]     return next(self._cb_iter)
+[mission-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 624, in _wait_for_ready_callbacks
+[mission-14]     raise ExternalShutdownException()
+[mission-14] rclpy.executors.ExternalShutdownException
+[mission-14] 
+[mission-14] During handling of the above exception, another exception occurred:
+[mission-14] 
+[mission-14] Traceback (most recent call last):
+[mission-14]   File "/home/maedeh/HomeBot/install/homebot_control/lib/homebot_control/mission", line 33, in <module>
+[mission-14]     sys.exit(load_entry_point('homebot-control', 'console_scripts', 'mission')())
+[mission-14]   File "/home/maedeh/HomeBot/build/homebot_control/homebot_control/mission_node.py", line 395, in main
+[mission-14]     node.stop()
+[mission-14]   File "/home/maedeh/HomeBot/build/homebot_control/homebot_control/mission_node.py", line 106, in stop
+[mission-14]     self.drive(0.0, 0.0)
+[mission-14]   File "/home/maedeh/HomeBot/build/homebot_control/homebot_control/mission_node.py", line 103, in drive
+[mission-14]     self._cmd.publish(msg)
+[mission-14]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/publisher.py", line 70, in publish
+[mission-14]     self.__publisher.publish(msg)
+[mission-14] rclpy._rclpy_pybind11.RCLError: Failed to publish: publisher's context is invalid, at ./src/rcl/publisher.c:389
+[posture-13] Traceback (most recent call last):
+[posture-13]   File "/home/maedeh/HomeBot/install/homebot_control/lib/homebot_control/posture", line 33, in <module>
+[posture-13]     sys.exit(load_entry_point('homebot-control', 'console_scripts', 'posture')())
+[posture-13]   File "/home/maedeh/HomeBot/build/homebot_control/homebot_control/posture_node.py", line 99, in main
+[posture-13]     rclpy.spin(node)
+[posture-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/__init__.py", line 229, in spin
+[posture-13]     executor.spin_once()
+[posture-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 751, in spin_once
+[posture-13]     self._spin_once_impl(timeout_sec)
+[posture-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 740, in _spin_once_impl
+[posture-13]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[posture-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 723, in wait_for_ready_callbacks
+[posture-13]     return next(self._cb_iter)
+[posture-13]   File "/opt/ros/humble/local/lib/python3.10/dist-packages/rclpy/executors.py", line 624, in _wait_for_ready_callbacks
+[posture-13]     raise ExternalShutdownException()
+[posture-13] rclpy.executors.ExternalShutdownException
+[INFO] [robot_state_publisher-4]: process has finished cleanly [pid 64538]
+[ERROR] [posture-13]: process has died [pid 64559, exit code 1, cmd '/home/maedeh/HomeBot/install/homebot_control/lib/homebot_control/posture --ros-args --params-file /tmp/launch_params_dsogy7wa'].
+[ERROR] [mission-14]: process has died [pid 64562, exit code 1, cmd '/home/maedeh/HomeBot/install/homebot_control/lib/homebot_control/mission --ros-args --params-file /tmp/launch_params_qwp_8kh6'].
+[INFO] [webots-1]: process has finished cleanly [pid 64530]
+[ros2_supervisor.py-2] Cannot connect to Webots instance, retrying for another 50 seconds...
+[webots_controller_HomeBot-3] [ros2run]: Aborted
+[ERROR] [webots_controller_HomeBot-3]: process has died [pid 64535, exit code 250, cmd '/opt/ros/humble/share/webots_ros2_driver/scripts/webots-controller --robot-name=HomeBot --protocol=tcp --ip-address=127.0.0.1 --port=1234 ros2 --ros-args -p robot_description:=/home/maedeh/HomeBot/install/homebot_description/share/homebot_description/urdf/homebot.urdf -p use_sim_time:=true --params-file /home/maedeh/HomeBot/install/homebot_control/share/homebot_control/config/homebot_controllers.yaml'].
+[ros2_supervisor.py-2] Cannot connect to Webots instance, retrying for another 45 seconds...

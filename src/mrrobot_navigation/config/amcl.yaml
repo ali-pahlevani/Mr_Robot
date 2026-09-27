@@ -1,0 +1,56 @@
+# AMCL on the saved kitchen map. From RainBot's amcl_tugbot.yaml; the changes
+# are the initial pose (the robot spawns at (0.15, 0.20) facing +y, and the map
+# was built from that same spawn so map == world here), a tighter update
+# cadence for a small room, and laser_max_range set to the lidar's 12 m.
+amcl:
+  ros__parameters:
+    use_sim_time: true
+    base_frame_id: base_footprint     # see ekf.yaml
+    odom_frame_id: odom
+    global_frame_id: map
+    scan_topic: /scan_filtered
+    # the surfaces-only map (see localization.launch.py); the costmaps use /map
+    map_topic: /map_surface
+    set_initial_pose: true
+    initial_pose:
+      x: 0.15
+      y: 0.20
+      z: 0.0
+      yaw: 1.5708
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    laser_model_type: "likelihood_field"
+    laser_max_range: 25.0
+    laser_min_range: 0.12
+    max_beams: 270
+    min_particles: 500
+    max_particles: 2000
+    # Odometry noise from what was measured, not RainBot's 0.2s: the EKF's
+    # heading is the IMU's, straight runs are exact, and a turn on the spot
+    # drifts 2-8 cm per 85 degrees (alpha4). With everything at 0.2 the cloud
+    # spread a metre on every turn, collapsed onto whichever pose scored
+    # best in a smooth likelihood field, and then sat 10 cm off, stationary,
+    # with nothing to pull it back (measured at the honey station: 10 cm in
+    # y, while a reset to the true pose held within 2 cm).
+    # rotation noise small: the EKF's heading is the IMU's. Translation
+    # noise larger than a diff-drive's, from both translation and rotation:
+    # a spin on the spot skids the base 4-10 cm (measured), which the
+    # odometry cannot see, and at 0.05/0.02 the cloud could not cover it
+    # (measured: 5-12 cm behind the truth after every hop, on a map whose
+    # surfaces would have told it)
+    alpha1: 0.05
+    alpha2: 0.05
+    alpha3: 0.15
+    alpha4: 0.15
+    # A sharper field on a 5 cm map: sigma_hit 0.1 made a 10 cm error score
+    # almost as well as the truth.
+    z_hit: 0.85
+    z_rand: 0.15
+    sigma_hit: 0.04
+    laser_likelihood_max_dist: 2.0
+    update_min_a: 0.05
+    update_min_d: 0.05
+    resample_interval: 1
+    transform_tolerance: 1.0
+    recovery_alpha_slow: 0.0
+    recovery_alpha_fast: 0.0
+    tf_broadcast: true

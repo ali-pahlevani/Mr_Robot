@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+  OpenFleX's 2-DOF head (openarmx_head_description), as openarmx_integrated
+  _description mounts it: base bracket fixed to the lift carriage, pitch
+  (bottom motor, nods about x) then yaw (upper motor, turns about z). The
+  link and joint definitions, mesh origins and limits are copied verbatim from
+  openarmx_integrated_robot.urdf.xacro; head.urdf.xacro in the head package is
+  a standalone variant with the same numbers.
+
+  Two things are added that OpenFleX's version does not carry: inertials and
+  collision boxes. Webots needs both : a moving Solid without Physics stops
+  the joint chain, and urdf2webots drops any link that has neither mass nor
+  collision, which for this head meant dropping the head. The boxes are the
+  measured envelopes of the shells.
+
+  The head faces +y in head_yaw_link (the front shell spans y -0.04..0.08);
+  in the robot that is forward, because the lift carriage's +y is base_link
+  +x. OpenFleX's Femto Bolt (femto_bolt_camera.STL, set into the front
+  shell's groove) is left out: the robot's own D455 goes in that groove
+  instead, see the sensors section of mrRobot.urdf.xacro.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="openflex_head" params="parent xyz rpy">
+    <xacro:property name="head_pkg" value="package://openarmx_head_description/meshes/visual"/>
+    <xacro:property name="mm" value="0.001 0.001 0.001"/>
+    <material name="head_grey"><color rgba="0.5 0.5 0.5 1.0"/></material>
+    <material name="head_dark_grey"><color rgba="0.2 0.2 0.2 1.0"/></material>
+    <material name="head_white"><color rgba="0.9 0.9 0.9 1.0"/></material>
+    <material name="head_black"><color rgba="0.1 0.1 0.1 1.0"/></material>
+
+    <link name="head_base_link">
+      <xacro:head_visual mesh="TBBJ-04_neck_mount" xyz="-0.5630 0.0866 0.0" mat="head_grey"/>
+      <xacro:head_visual mesh="TBBJ-02_neck_bracket" xyz="-0.5630 0.0866 0.0" mat="head_grey"/>
+      <xacro:head_visual mesh="TBBJ-06_neck_limit" xyz="-0.5630 0.0866 0.0" mat="head_grey"/>
+      <xacro:head_visual mesh="RS00_motor_2" xyz="-0.5630 0.0866 0.0" mat="head_dark_grey"/>
+      <collision><origin xyz="0 0 0.02"/><geometry><box size="0.09 0.09 0.04"/></geometry></collision>
+      <xacro:box_inertia mass="0.4" x="0.09" y="0.09" z="0.04"/>
+    </link>
+    <joint name="head_base_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="head_base_link"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+    </joint>
+
+    <link name="head_pitch_link">
+      <xacro:head_visual mesh="DY-03_neck_cover" xyz="-0.5631 0.0798 -0.0395" mat="head_white"/>
+      <xacro:head_visual mesh="RS00_motor_1" xyz="-0.5631 0.0798 -0.0395" mat="head_dark_grey"/>
+      <xacro:head_visual mesh="TB-01_head_connector" xyz="-0.5631 0.0798 -0.0395" mat="head_grey"/>
+      <xacro:head_visual mesh="TBBJ-03_guard_plate" xyz="-0.5631 0.0798 -0.0395" mat="head_grey"/>
+      <collision><origin xyz="0 0 0.035"/><geometry><box size="0.09 0.09 0.07"/></geometry></collision>
+      <xacro:box_inertia mass="0.6" x="0.09" y="0.09" z="0.07"/>
+    </link>
+    <joint name="openarmx_head_pitch_joint" type="revolute">
+      <parent link="head_base_link"/>
+      <child link="head_pitch_link"/>
+      <origin xyz="0.0001 0.0068 0.0395" rpy="0 0 0"/>
+      <axis xyz="1 0 0"/>
+      <limit lower="-1.086" upper="0.403" velocity="33.0" effort="14.0"/>
+    </joint>
+
+    <link name="head_yaw_link">
+      <xacro:head_visual mesh="TBBJ-01_head_bracket" xyz="-0.5631 0.0824 -0.1072" mat="head_grey"/>
+      <xacro:head_visual mesh="TBBJ-05_head_limit" xyz="-0.5631 0.0824 -0.1072" mat="head_grey"/>
+      <xacro:head_visual mesh="DY-01_head_front_shell" xyz="-0.5631 0.0824 -0.1072" mat="head_white"/>
+      <xacro:head_visual mesh="DY-02_head_rear_shell" xyz="-0.5631 0.0824 -0.1072" mat="head_white"/>
+      <collision><origin xyz="0 0.02 0.05"/><geometry><box size="0.18 0.16 0.12"/></geometry></collision>
+      <xacro:box_inertia mass="1.2" x="0.18" y="0.16" z="0.12"/>
+    </link>
+    <joint name="openarmx_head_yaw_joint" type="revolute">
+      <parent link="head_pitch_link"/>
+      <child link="head_yaw_link"/>
+      <origin xyz="0.0 -0.0026 0.0677" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-1.5708" upper="1.5708" velocity="33.0" effort="14.0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="head_visual" params="mesh xyz mat">
+    <visual>
+      <origin xyz="${xyz}" rpy="${pi/2} 0 0"/>
+      <geometry><mesh filename="${head_pkg}/${mesh}.STL" scale="${mm}"/></geometry>
+      <material name="${mat}"/>
+    </visual>
+  </xacro:macro>
+</robot>

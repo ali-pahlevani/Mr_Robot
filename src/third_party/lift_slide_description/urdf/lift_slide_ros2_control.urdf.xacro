@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro
+    name="lift_slide_ros2_control"
+    params="
+      can_interface:=^|can3
+      node_id:=^|16
+      calibration_file:=^|
+      use_fake_hardware:=^|true
+      min_position_m:=^|-0.750
+      max_position_m:=^|0.400
+      max_velocity_mps:=^|0.10
+      counts_per_meter:=^|2000000.0
+      counts_per_revolution:=^|10000.0
+      profile_acceleration:=^|50000
+      profile_deceleration:=^|50000
+      homing_method:=^|27
+      homing_speed_mps:=^|0.010
+      homing_low_speed_ratio:=^|0.2
+      homing_acceleration:=^|50000
+      homing_timeout_sec:=^|60.0
+      homing_configure_di:=^|true
+      lower_switch_position_m:=^|0.000
+      home_switch_position_m:=^|0.650
+      upper_switch_position_m:=^|0.950
+      switch_position_tolerance_m:=^|0.008
+      di_active_low:=^|true
+      di6_not_func:=^|2
+      di4_homing_func:=^|22
+      di5_pot_func:=^|1
+      home_di_channel:=^|4
+      pot_di_channel:=^|5
+      not_di_channel:=^|6
+      invert_command:=^|true
+      invert_feedback:=^|true
+      command_timeout_sec:=^|0.5
+      sdo_timeout_sec:=^|0.20
+      feedback_poll_rate_hz:=^|20.0">
+    <ros2_control name="LiftSlideSystem" type="system">
+      <hardware>
+        <plugin>lift_slide_driver/LiftSlideHardwareInterface</plugin>
+        <param name="can_interface">${can_interface}</param>
+        <param name="node_id">${node_id}</param>
+        <param name="calibration_file">${calibration_file}</param>
+        <param name="use_fake_hardware">${use_fake_hardware}</param>
+        <param name="min_position_m">${min_position_m}</param>
+        <param name="max_position_m">${max_position_m}</param>
+        <param name="max_velocity_mps">${max_velocity_mps}</param>
+        <param name="counts_per_meter">${counts_per_meter}</param>
+        <param name="counts_per_revolution">${counts_per_revolution}</param>
+        <param name="profile_acceleration">${profile_acceleration}</param>
+        <param name="profile_deceleration">${profile_deceleration}</param>
+        <param name="homing_method">${homing_method}</param>
+        <param name="homing_speed_mps">${homing_speed_mps}</param>
+        <param name="homing_low_speed_ratio">${homing_low_speed_ratio}</param>
+        <param name="homing_acceleration">${homing_acceleration}</param>
+        <param name="homing_timeout_sec">${homing_timeout_sec}</param>
+        <param name="homing_configure_di">${homing_configure_di}</param>
+        <param name="lower_switch_position_m">${lower_switch_position_m}</param>
+        <param name="home_switch_position_m">${home_switch_position_m}</param>
+        <param name="upper_switch_position_m">${upper_switch_position_m}</param>
+        <param name="switch_position_tolerance_m">${switch_position_tolerance_m}</param>
+        <param name="di_active_low">${di_active_low}</param>
+        <param name="di6_not_func">${di6_not_func}</param>
+        <param name="di4_homing_func">${di4_homing_func}</param>
+        <param name="di5_pot_func">${di5_pot_func}</param>
+        <param name="home_di_channel">${home_di_channel}</param>
+        <param name="pot_di_channel">${pot_di_channel}</param>
+        <param name="not_di_channel">${not_di_channel}</param>
+        <param name="invert_command">${invert_command}</param>
+        <param name="invert_feedback">${invert_feedback}</param>
+        <param name="command_timeout_sec">${command_timeout_sec}</param>
+        <param name="sdo_timeout_sec">${sdo_timeout_sec}</param>
+        <param name="feedback_poll_rate_hz">${feedback_poll_rate_hz}</param>
+      </hardware>
+
+      <joint name="lift_joint">
+        <command_interface name="velocity">
+          <param name="min">-${max_velocity_mps}</param>
+          <param name="max">${max_velocity_mps}</param>
+        </command_interface>
+        <command_interface name="position">
+          <param name="min">${min_position_m}</param>
+          <param name="max">${max_position_m}</param>
+        </command_interface>
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+      </joint>
+    </ros2_control>
+  </xacro:macro>
+</robot>

@@ -1,0 +1,48 @@
+# MoveIt executes through the SAME JointTrajectoryControllers ros2_control
+# already runs (mrrobot_control/config/mrRobot_controllers.yaml); nothing
+# new is spawned. A group spanning two controllers (the *_arm_lift groups:
+# lift_controller + an arm) is split across them by the simple controller
+# manager, which sends each its slice of the trajectory.
+moveit_controller_manager: moveit_simple_controller_manager/MoveItSimpleControllerManager
+moveit_simple_controller_manager:
+  controller_names:
+    - left_arm_controller
+    - right_arm_controller
+    - lift_controller
+    - head_controller
+    - left_gripper_controller
+    - right_gripper_controller
+  left_arm_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints: [openarmx_left_joint1, openarmx_left_joint2, openarmx_left_joint3, openarmx_left_joint4,
+             openarmx_left_joint5, openarmx_left_joint6, openarmx_left_joint7]
+  right_arm_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints: [openarmx_right_joint1, openarmx_right_joint2, openarmx_right_joint3, openarmx_right_joint4,
+             openarmx_right_joint5, openarmx_right_joint6, openarmx_right_joint7]
+  lift_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints: [lift_joint]
+  head_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints: [openarmx_head_pitch_joint, openarmx_head_yaw_joint]
+  # finger_joint2 is a passive mimic joint for MoveIt; the ros2_control
+  # controller still drives both fingers (see mrRobot_controllers.yaml).
+  left_gripper_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints: [openarmx_left_finger_joint1]
+  right_gripper_controller:
+    type: FollowJointTrajectory
+    action_ns: follow_joint_trajectory
+    default: true
+    joints: [openarmx_right_finger_joint1]

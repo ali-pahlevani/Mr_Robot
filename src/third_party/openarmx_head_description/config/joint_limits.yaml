@@ -1,0 +1,15 @@
+# Head joint limits
+# RS00 motor limits. Pitch uses the physical asymmetric travel range.
+joint_limits:
+  openarmx_head_yaw_joint:
+    has_position_limits: true
+    min_position: -1.5708   # -90 deg
+    max_position: 1.5708    #  90 deg
+    max_velocity: 33.0      # RS00 max
+    max_effort: 14.0        # RS00 max
+  openarmx_head_pitch_joint:
+    has_position_limits: true
+    min_position: -1.086    # -62.2 deg
+    max_position: 0.403     #  23.1 deg
+    max_velocity: 33.0      # RS00 max
+    max_effort: 14.0        # RS00 max

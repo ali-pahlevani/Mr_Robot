@@ -1,0 +1,57 @@
+# slam_toolbox, async mapping, for building mrrobot_navigation/maps/kitchen.
+# Taken from RainBot's slam_toolbox.yaml with the ranges set for this lidar
+# (12 m) and this room (3.7 x 4.5 m).
+#
+# Scan matching and loop closure are OFF, which makes this an odometry mapper.
+# Measured: with Karto's scan matcher on, the saved map had the east counter
+# tilted 4.4 degrees, the west wall 11.7 and the south wall 3, and AMCL on it
+# carried a 4-5 degree yaw bias and 10-25 cm of error. The EKF's odometry
+# (heading from the IMU, distance from the wheels) brought the mapping tour
+# back to its start within 6 cm, so it is the better pose source here and the
+# scan matcher only had a 1 degree, 8.6 Hz lidar to argue with it.
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: true
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_footprint
+    scan_topic: /scan_filtered
+    mode: mapping
+    debug_logging: false
+    throttle_scans: 1
+    transform_publish_period: 0.02
+    map_update_interval: 1.0
+    resolution: 0.05
+    max_laser_range: 10.0
+    minimum_time_between_scans: 0.2
+    transform_timeout: 0.2
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000
+    use_scan_matching: false
+    use_scan_barycenter: true
+    minimum_travel_distance: 0.05
+    minimum_travel_heading: 0.05
+    scan_buffer_size: 15
+    scan_buffer_maximum_scan_distance: 10.0
+    link_match_minimum_response_fine: 0.1
+    link_scan_maximum_distance: 1.5
+    loop_search_maximum_distance: 3.0
+    do_loop_closing: false
+    loop_match_minimum_chain_size: 10
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_coarse: 0.35
+    loop_match_minimum_response_fine: 0.45
+    correlation_search_space_dimension: 0.5
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
+    loop_search_space_dimension: 8.0
+    loop_search_space_resolution: 0.05
+    loop_search_space_smear_deviation: 0.03
+    distance_variance_penalty: 0.3
+    angle_variance_penalty: 0.3
+    fine_search_angle_offset: 0.00349
+    coarse_search_angle_offset: 0.349
+    coarse_angle_resolution: 0.0349
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+    use_response_expansion: true
