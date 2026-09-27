@@ -1,6 +1,6 @@
-# mrRobot: a wheeled humanoid in a Webots kitchen
+# Mr. Robot: a wheeled humanoid in a Webots kitchen
 
-![mrRobot in RViz and Webots](docs/images/banner.png)
+![Mr. Robot in RViz and Webots](docs/images/banner.png)
 
 A ROS 2 Humble + Webots R2025a simulation of a wheeled humanoid: the OpenFleX
 upper body (a lift column, two 7-DOF OpenArmX arms with two-finger hands, and a
@@ -33,7 +33,7 @@ launch) and takes about three and a half minutes.
 | `mission` | `false` | Run the errand in `mission_file` once the stack is up |
 | `mission_file` | `kitchen_errand.yaml` | The errand to run (from `mrrobot_control/config/missions`) |
 | `gui` | `true` | Webots' 3D window; with `false` the cameras still render |
-| `rviz` | `true` | RViz with the mrRobot layout |
+| `rviz` | `true` | RViz with the Mr. Robot layout |
 | `headless` | `false` | Webots without rendering, in fast mode, and no RViz |
 | `localization` | `amcl` | What publishes `map -> odom`: `amcl`, `slam` or `none` |
 | `nav` | `true` | The Nav2 servers |
@@ -527,7 +527,7 @@ ros2 service call /relocalize std_srvs/srv/Trigger
 
 ## License
 
-The mrRobot packages are released under the MIT License (see [LICENSE](LICENSE)).
+The Mr. Robot packages are released under the MIT License (see [LICENSE](LICENSE)).
 The packages in `src/third_party/` and the meshes in
 `src/mrrobot_description/meshes/` keep their own licenses: the OpenFleX
 packages are CC BY-NC-SA 4.0, `pymoveit2` is BSD-3-Clause, and the base and
